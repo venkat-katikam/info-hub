@@ -1,16 +1,9 @@
+import { getDataFromToken } from "@/helpers/getUserFromToken";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
+import { cookies } from "next/headers";
+import jwt from "jsonwebtoken";
 
 const f = createUploadthing();
-
-// TODO: replace below with if user logged in or not
-const promiseFunction = () => {
-  const prom = new Promise((resolve) => {
-    resolve({ id: "1" });
-  });
-  return prom;
-};
-
-const getUser = async () => await promiseFunction();
 
 export const ourFileRouter = {
   // Define as many FileRoutes as you like, each with a unique routeSlug
@@ -18,7 +11,9 @@ export const ourFileRouter = {
     // Set permissions and file types for this FileRoute
     .middleware(async (req) => {
       // This code runs on your server before upload
-      const user = await getUser();
+
+      const token = cookies().get("token");
+      const user: any = jwt.verify(token, process.env.TOKEN_SECRET!);
 
       // If you throw, the user will not be able to upload
       if (!user) throw new Error("Unauthorized");

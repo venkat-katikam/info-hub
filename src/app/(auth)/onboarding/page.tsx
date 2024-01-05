@@ -1,17 +1,34 @@
+"use client";
 import AccountProfile from "@/components/forms/AccountProfile";
+import { useEffect, useState } from "react";
 
 export default function Page() {
-  const userInfo = {
-    id: "1",
-    username: "venkyee",
-    name: "venkat",
-    bio: "Software developer",
-    image: "",
+  const [userInfo, setUserInfo] = useState({});
+  const fetchUser = async () => {
+    try {
+      const response = await fetch(`/api/user`, {
+        cache: "no-store",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch a user");
+      }
+      const responseData = await response.json();
+      console.log("responseData", responseData);
+      setUserInfo(responseData?.userData);
+    } catch (error) {
+      console.log("Some error in fetching a user", error);
+    }
   };
+  console.log("userInfo", userInfo);
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
 
   const userData = {
-    id: userInfo?.id,
-    username: userInfo?.username,
+    id: userInfo?._id,
+    email: userInfo?.email,
     name: userInfo?.name,
     bio: userInfo?.bio,
     image: userInfo.image,
@@ -25,7 +42,7 @@ export default function Page() {
         Please fill the below details to start
       </p>
       <section className="mt-9 bg-dark-2 p-10">
-        <AccountProfile user={userData} btnTitle="Continue" />
+        {userData?.id && <AccountProfile user={userData} btnTitle="Continue" />}
       </section>
     </main>
   );

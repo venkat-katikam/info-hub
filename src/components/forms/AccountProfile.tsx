@@ -21,11 +21,11 @@ import Image from "next/image";
 import { ChangeEvent, useState } from "react";
 import { useUploadThing } from "@/lib/uploadthing";
 import { isBase64Image } from "@/lib/utils";
-
+import { usePathname, useRouter } from "next/navigation";
 interface Props {
   user: {
     id: string;
-    username: string;
+    email: string;
     name: string;
     bio: string;
     image: string;
@@ -34,16 +34,20 @@ interface Props {
 }
 
 const AccountProfile = ({ user, btnTitle }: Props) => {
+  console.log("Account profile", user);
   const [files, setFiles] = useState<File[]>([]);
 
   const { startUpload } = useUploadThing("media");
+
+  const router = useRouter();
+  const pathname = usePathname();
 
   const form = useForm({
     resolver: zodResolver(UserValidationSchema),
     defaultValues: {
       profile_photo: user?.image || "",
       name: user?.name || "",
-      username: user?.username || "",
+      email: user?.email || "",
       bio: user?.bio || "",
     },
   });
@@ -72,31 +76,43 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
   };
 
   const onSubmit = async (values: z.infer<typeof UserValidationSchema>) => {
+    console.log("values", values);
     const blob = values.profile_photo;
 
     const hasImageChanged = isBase64Image(blob);
     if (hasImageChanged) {
       const imgRes = await startUpload(files);
+      console.log("imgres", imgRes);
 
       if (imgRes && imgRes[0].fileUrl) {
         values.profile_photo = imgRes[0].fileUrl;
       }
     }
 
-    // await updateUser({
-    //   name: values.name,
-    //   path: pathname,
-    //   username: values.username,
-    //   userId: user.id,
-    //   bio: values.bio,
-    //   image: values.profile_photo,
-    // });
+    try {
+      const response = await fetch(`api/user`, {
+        method: "PUT",
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify({
+          userId: user.id,
+          email: values.email,
+          name: values.name,
+          bio: values.bio,
+          image: values.profile_photo,
+        }),
+      });
 
-    // if (pathname === "/profile/edit") {
-    //   router.back();
-    // } else {
-    //   router.push("/");
-    // }
+      if (!response.ok) {
+        throw new Error("Failed to update user");
+      }
+      if (pathname === "/profile/edit") {
+        router.back();
+      } else {
+        router.push("/");
+      }
+    } catch (error) {
+      console.log("Some error in updating user", error);
+    }
   };
 
   return (
@@ -165,11 +181,11 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
 
         <FormField
           control={form.control}
-          name="username"
+          name="email"
           render={({ field }) => (
             <FormItem className="flex flex-col gap-3 w-full">
               <FormLabel className="text-base-semibold text-light-2">
-                Username
+                Email
               </FormLabel>
               <FormControl className="flex-1 text-base-semibold text-gray-200">
                 <Input
@@ -202,7 +218,7 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button type="submit">{btnTitle}</Button>
       </form>
     </Form>
   );

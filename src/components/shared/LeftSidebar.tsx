@@ -9,6 +9,13 @@ function LeftSidebar() {
   const pathname = usePathname();
   const isSignedIn = true;
 
+  const logoutHandler = async () => {
+    const response = await fetch("/api/logout");
+    const responseData = await response.json();
+    console.log("responseData", responseData);
+    router.push("/login");
+  };
+
   return (
     <section className="custom-scrollbar leftsidebar">
       <div className="flex w-full flex-1 flex-col gap-6 px-6">
@@ -37,7 +44,10 @@ function LeftSidebar() {
       {/* logout button */}
       {isSignedIn && (
         <div className="mt-10 px-6">
-          <div className="flex cursor-pointer gap-4 p-4">
+          <div
+            className="flex cursor-pointer gap-4 p-4"
+            onClick={logoutHandler}
+          >
             <Image
               src="assets/logout.svg"
               alt="logout"
