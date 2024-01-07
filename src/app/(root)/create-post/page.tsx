@@ -1,22 +1,39 @@
-import { fetchUser } from "@/actions/user.action";
+"use client";
 import CreatePost from "@/components/forms/CreatePost";
 import { getDataFromToken } from "@/helpers/getUserFromToken";
 import { redirect } from "next/navigation";
+import { useEffect, useState } from "react";
 
-async function Page() {
-  const user = getDataFromToken();
+function Page() {
+  const [user, setUser] = useState({});
 
-  if (!user) return null;
+  const fetchUser = async () => {
+    try {
+      const response = await fetch(`/api/user`, {
+        cache: "no-store",
+      });
 
-  const userInfo = await fetchUser(user.id);
+      if (!response.ok) {
+        throw new Error("Failed to fetch a user");
+      }
+      const responseData = await response.json();
+      setUser(responseData?.data);
+    } catch (error) {
+      console.log("Some error in fetching a user", error);
+    }
+  };
 
-  if (!userInfo?.onboarded) redirect("/onboarding");
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
+  // if (!user) return <h1>loading</h1>;
 
   return (
     <>
       <h1 className="head-text">Create Post</h1>
 
-      <CreatePost userId={userInfo._id} />
+      {user?._id && <CreatePost userId={user?._id} />}
     </>
   );
 }

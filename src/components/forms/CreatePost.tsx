@@ -18,18 +18,6 @@ import { Textarea } from "@/components/ui/textarea";
 
 import { PostValidationSchema } from "@/lib/validations/post";
 import { usePathname, useRouter } from "next/navigation";
-import { createPost } from "@/actions/post.action";
-
-interface Props {
-  user: {
-    id: string;
-    email: string;
-    name: string;
-    bio: string;
-    image: string;
-  };
-  btnTitle: string;
-}
 
 function CreatePost({ userId }: { userId: string }) {
   const router = useRouter();
@@ -44,14 +32,27 @@ function CreatePost({ userId }: { userId: string }) {
   });
 
   const onSubmit = async (values: z.infer<typeof PostValidationSchema>) => {
-    await createPost({
-      text: values.post,
-      author: userId,
-      communityId: null,
-      path: pathname,
-    });
+    try {
+      const response = await fetch("api/post", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          text: values.post,
+          author: userId,
+          communityId: null,
+        }),
+      });
 
-    router.push("/");
+      if (response.ok) {
+        const responseData = await response.json();
+
+        router.push("/");
+      } else {
+        const responseData = await response.json();
+      }
+    } catch (error: any) {
+      console.log("Error during uploading post", error);
+    }
   };
 
   return (
