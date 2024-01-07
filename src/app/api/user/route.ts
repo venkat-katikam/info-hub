@@ -6,12 +6,15 @@ export async function GET(request: NextRequest) {
   try {
     const userId = await getDataFromToken(request);
     const user = await User.findOne({ _id: userId }).select("-password");
-    return NextResponse.json({
-      message: "User found",
-      userData: user,
-    });
+    return NextResponse.json(
+      {
+        message: "User found",
+        data: user,
+      },
+      { status: 200 }
+    );
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 400 });
+    return NextResponse.json({ errorMessage: error.message }, { status: 400 });
   }
 }
 
@@ -23,11 +26,20 @@ export async function PUT(request: NextRequest) {
       { email: email.toLowerCase(), name, bio, image, onboarded: true },
       { upsert: true }
     );
-    return NextResponse.json({
-      message: "User found",
-      userData: user,
-    });
+    return NextResponse.json(
+      {
+        message: "User Updated",
+        data: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          bio: user.bio,
+          image: user.image,
+        },
+      },
+      { status: 200 }
+    );
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 400 });
+    return NextResponse.json({ errorMessage: error.message }, { status: 400 });
   }
 }

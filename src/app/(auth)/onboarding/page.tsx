@@ -15,7 +15,7 @@ export default function Page() {
       }
       const responseData = await response.json();
       console.log("responseData", responseData);
-      setUserInfo(responseData?.userData);
+      setUserInfo(responseData?.data);
     } catch (error) {
       console.log("Some error in fetching a user", error);
     }

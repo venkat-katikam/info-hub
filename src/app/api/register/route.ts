@@ -9,25 +9,33 @@ export async function POST(req: NextRequest) {
   try {
     const { name, email, password } = await req.json();
 
-    const userAlreadyExists = await User.findOne({ email });
+    const userAlreadyExists = await User.findOne({
+      email: email.toLowerCase(),
+    });
 
     if (userAlreadyExists) {
       return NextResponse.json(
-        { message: "User already exists" },
+        { errorMessage: "User already exists" },
         { status: 400 }
       );
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await User.create({ name, email, password: hashedPassword });
+    await User.create({
+      name,
+      email: email.toLowerCase(),
+      password: hashedPassword,
+    });
 
     console.log("name, email, password", name, email, password);
 
     return NextResponse.json({ message: "User registered" }, { status: 201 });
-  } catch (error) {
+  } catch (error: any) {
     return NextResponse.json(
-      { message: "An error occured while registering user" },
+      {
+        errorMessage: `An error occured while registering user ${error.message}`,
+      },
       { status: 500 }
     );
   }

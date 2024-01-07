@@ -51,8 +51,8 @@ const LoginPage = () => {
       } else {
         console.log("User login failed");
       }
-    } catch (error) {
-      console.log("Error during login", error);
+    } catch (error: any) {
+      console.log("Error during login", error.message);
     }
   };
 

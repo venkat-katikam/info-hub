@@ -12,10 +12,10 @@ export async function POST(req: NextRequest) {
     console.log(" email, password", email, password);
 
     //check if user exists
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email: email.toLowerCase() });
     if (!user) {
       return NextResponse.json(
-        { error: "User does not exist" },
+        { errorMessage: "User does not exist" },
         { status: 400 }
       );
     }
@@ -24,14 +24,17 @@ export async function POST(req: NextRequest) {
     //check if password is correct
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) {
-      return NextResponse.json({ error: "Invalid password" }, { status: 400 });
+      return NextResponse.json(
+        { errorMessage: "Invalid password" },
+        { status: 400 }
+      );
     }
     console.log(user);
 
     //create token data
     const tokenData = {
       id: user._id,
-      username: user.username,
+      name: user.name,
       email: user.email,
     };
     //create token
@@ -45,7 +48,7 @@ export async function POST(req: NextRequest) {
         success: true,
         data: {
           id: user._id,
-          username: user.username,
+          name: user.name,
           email: user.email,
           onboarded: user.onboarded,
         },
@@ -57,9 +60,9 @@ export async function POST(req: NextRequest) {
     });
 
     return response;
-  } catch (error) {
+  } catch (error: any) {
     return NextResponse.json(
-      { message: "An error occured while user login" },
+      { errorMessage: `An error occured while user login ${error.message}` },
       { status: 500 }
     );
   }
