@@ -24,6 +24,7 @@ const RegisterPage = () => {
   const form = useForm({
     resolver: zodResolver(RegisterValidationSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
     },

@@ -3,7 +3,16 @@ import AccountProfile from "@/components/forms/AccountProfile";
 import { useEffect, useState } from "react";
 
 export default function Page() {
-  const [userInfo, setUserInfo] = useState({});
+  interface UserData {
+    _id: string;
+    email: string;
+    name: string;
+    bio: string;
+    image: string;
+  }
+
+  const [userInfo, setUserInfo] = useState<UserData>({});
+
   const fetchUser = async () => {
     try {
       const response = await fetch(`/api/user`, {

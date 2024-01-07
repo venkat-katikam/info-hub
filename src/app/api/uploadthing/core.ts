@@ -13,7 +13,7 @@ export const ourFileRouter = {
       // This code runs on your server before upload
 
       const token = cookies().get("token");
-      const user: any = jwt.verify(token, process.env.TOKEN_SECRET!);
+      const user = jwt.verify(token, process.env.TOKEN_SECRET!);
 
       // If you throw, the user will not be able to upload
       if (!user) throw new Error("Unauthorized");
