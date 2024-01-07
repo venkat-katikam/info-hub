@@ -9,7 +9,6 @@ connectMongoDB();
 export async function POST(req: NextRequest) {
   try {
     const { email, password } = await req.json();
-    console.log(" email, password", email, password);
 
     //check if user exists
     const user = await User.findOne({ email: email.toLowerCase() });
@@ -19,7 +18,6 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-    console.log("user exists");
 
     //check if password is correct
     const validPassword = await bcrypt.compare(password, user.password);
@@ -29,7 +27,6 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-    console.log(user);
 
     //create token data
     const tokenData = {

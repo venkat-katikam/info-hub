@@ -34,7 +34,6 @@ interface Props {
 }
 
 const AccountProfile = ({ user, btnTitle }: Props) => {
-  console.log("Account profile", user);
   const [files, setFiles] = useState<File[]>([]);
 
   const { startUpload } = useUploadThing("media");
@@ -76,13 +75,11 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
   };
 
   const onSubmit = async (values: z.infer<typeof UserValidationSchema>) => {
-    console.log("values", values);
     const blob = values.profile_photo;
 
     const hasImageChanged = isBase64Image(blob);
     if (hasImageChanged) {
       const imgRes = await startUpload(files);
-      console.log("imgres", imgRes);
 
       if (imgRes && imgRes[0].fileUrl) {
         values.profile_photo = imgRes[0].fileUrl;

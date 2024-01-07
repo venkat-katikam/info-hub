@@ -43,7 +43,6 @@ const RegisterPage = () => {
 
       if (response.ok) {
         const responseData = await response.json();
-        console.log("responseData", responseData);
 
         router.push("/login");
       } else {

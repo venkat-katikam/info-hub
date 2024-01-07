@@ -14,13 +14,11 @@ export default function Page() {
         throw new Error("Failed to fetch a user");
       }
       const responseData = await response.json();
-      console.log("responseData", responseData);
       setUserInfo(responseData?.data);
     } catch (error) {
       console.log("Some error in fetching a user", error);
     }
   };
-  console.log("userInfo", userInfo);
 
   useEffect(() => {
     fetchUser();

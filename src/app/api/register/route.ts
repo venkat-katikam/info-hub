@@ -28,8 +28,6 @@ export async function POST(req: NextRequest) {
       password: hashedPassword,
     });
 
-    console.log("name, email, password", name, email, password);
-
     return NextResponse.json({ message: "User registered" }, { status: 201 });
   } catch (error: any) {
     return NextResponse.json(

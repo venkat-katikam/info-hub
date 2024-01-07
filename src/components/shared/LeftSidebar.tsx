@@ -12,7 +12,6 @@ function LeftSidebar() {
   const logoutHandler = async () => {
     const response = await fetch("/api/logout");
     const responseData = await response.json();
-    console.log("responseData", responseData);
     router.push("/login");
   };
 
