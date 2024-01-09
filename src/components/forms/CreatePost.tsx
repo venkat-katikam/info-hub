@@ -18,16 +18,38 @@ import { Textarea } from "@/components/ui/textarea";
 
 import { PostValidationSchema } from "@/lib/validations/post";
 import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
-function CreatePost({ userId }: { userId: string }) {
+function CreatePost() {
   const router = useRouter();
   const pathname = usePathname();
+
+  const [user, setUser] = useState({});
+
+  const fetchUser = async () => {
+    try {
+      const response = await fetch(`/api/user`, {
+        cache: "no-store",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch a user");
+      }
+      const responseData = await response.json();
+      setUser(responseData?.data);
+    } catch (error) {
+      console.log("Some error in fetching a user", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
 
   const form = useForm({
     resolver: zodResolver(PostValidationSchema),
     defaultValues: {
       post: "",
-      accountId: userId,
     },
   });
 
@@ -38,7 +60,7 @@ function CreatePost({ userId }: { userId: string }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           text: values.post,
-          author: userId,
+          author: user._id,
           communityId: null,
         }),
       });
@@ -56,31 +78,35 @@ function CreatePost({ userId }: { userId: string }) {
   };
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="mt-10 flex flex-col justify-start gap-10"
-      >
-        <FormField
-          control={form.control}
-          name="post"
-          render={({ field }) => (
-            <FormItem className="flex flex-col gap-3 w-full">
-              <FormLabel className="text-base-semibold text-light-2 ">
-                Content
-              </FormLabel>
-              <FormControl className="no-focus border border-dark-4 bg-dark-3 text-light-1 ">
-                <Textarea rows={10} {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit" className="bg-primary-500">
-          Post
-        </Button>
-      </form>
-    </Form>
+    <>
+      {user._id && (
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="mt-10 flex flex-col justify-start gap-10"
+          >
+            <FormField
+              control={form.control}
+              name="post"
+              render={({ field }) => (
+                <FormItem className="flex flex-col gap-3 w-full">
+                  <FormLabel className="text-base-semibold text-light-2 ">
+                    Content
+                  </FormLabel>
+                  <FormControl className="no-focus border border-dark-4 bg-dark-3 text-light-1 ">
+                    <Textarea rows={10} {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit" className="bg-primary-500">
+              Post
+            </Button>
+          </form>
+        </Form>
+      )}
+    </>
   );
 }
 
