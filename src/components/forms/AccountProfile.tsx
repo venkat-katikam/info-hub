@@ -18,38 +18,30 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import { useUploadThing } from "@/lib/uploadthing";
 import { isBase64Image } from "@/lib/utils";
 import { usePathname, useRouter } from "next/navigation";
 interface Props {
-  user: {
-    id: string;
-    email: string;
-    name: string;
-    bio: string;
-    image: string;
-  };
   btnTitle: string;
 }
 
-const AccountProfile = ({ user, btnTitle }: Props) => {
+interface UserData {
+  _id: string;
+  email: string;
+  name: string;
+  bio: string;
+  image: string;
+}
+
+const AccountProfile = ({ btnTitle }: Props) => {
   const [files, setFiles] = useState<File[]>([]);
+  const [user, setUser] = useState<UserData>({});
 
   const { startUpload } = useUploadThing("media");
 
   const router = useRouter();
   const pathname = usePathname();
-
-  const form = useForm({
-    resolver: zodResolver(UserValidationSchema),
-    defaultValues: {
-      profile_photo: user?.image || "",
-      name: user?.name || "",
-      email: user?.email || "",
-      bio: user?.bio || "",
-    },
-  });
 
   const handleImage = (
     e: ChangeEvent<HTMLInputElement>,
@@ -74,6 +66,42 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
     }
   };
 
+  const fetchUser = async () => {
+    try {
+      const response = await fetch(`/api/user`, {
+        cache: "no-store",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch a user");
+      }
+      const responseData = await response.json();
+      setUser(responseData?.data);
+    } catch (error) {
+      console.log("Some error in fetching a user", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
+  const { reset, ...form } = useForm({
+    resolver: zodResolver(UserValidationSchema),
+    defaultValues: useMemo(() => {
+      return {
+        profile_photo: user?.image || "",
+        name: user?.name || "",
+        email: user?.email || "",
+        bio: user?.bio || "",
+      };
+    }, [user]),
+  });
+
+  useEffect(() => {
+    reset(user);
+  }, [user]);
+
   const onSubmit = async (values: z.infer<typeof UserValidationSchema>) => {
     const blob = values.profile_photo;
 
@@ -91,7 +119,7 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
         method: "PUT",
         headers: { "Content-type": "application/json" },
         body: JSON.stringify({
-          userId: user.id,
+          userId: user._id,
           email: values.email,
           name: values.name,
           bio: values.bio,
@@ -113,7 +141,7 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
   };
 
   return (
-    <Form {...form}>
+    <Form {...{ reset, ...form }}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col justify-start gap-10"
