@@ -19,31 +19,21 @@ import { Textarea } from "@/components/ui/textarea";
 import { PostValidationSchema } from "@/lib/validations/post";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useUserContext } from "@/context/UserContext";
+import { fetchUser } from "@/helpers/fetchUser";
 
 function CreatePost() {
+  const { userData, setUserData } = useUserContext();
+
+  console.log("userContext create post page", userData);
+
   const router = useRouter();
   const pathname = usePathname();
 
-  const [user, setUser] = useState({});
-
-  const fetchUser = async () => {
-    try {
-      const response = await fetch(`/api/user`, {
-        cache: "no-store",
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch a user");
-      }
-      const responseData = await response.json();
-      setUser(responseData?.data);
-    } catch (error) {
-      console.log("Some error in fetching a user", error);
-    }
-  };
-
   useEffect(() => {
-    fetchUser();
+    if (!userData._id) {
+      fetchUser(setUserData);
+    }
   }, []);
 
   const form = useForm({
@@ -60,7 +50,7 @@ function CreatePost() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           text: values.post,
-          author: user._id,
+          author: userData._id,
           communityId: null,
         }),
       });

@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
 
     //create token data
     const tokenData = {
-      id: user._id,
+      _id: user._id,
       name: user.name,
       email: user.email,
     };
@@ -44,10 +44,14 @@ export async function POST(req: NextRequest) {
         message: "Login successful",
         success: true,
         data: {
-          id: user._id,
+          _id: user._id,
           name: user.name,
           email: user.email,
+          bio: user.bio,
+          image: user.image,
           onboarded: user.onboarded,
+          posts: user.posts,
+          communities: user.communities,
         },
       },
       { status: 200 }

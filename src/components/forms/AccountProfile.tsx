@@ -22,21 +22,18 @@ import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import { useUploadThing } from "@/lib/uploadthing";
 import { isBase64Image } from "@/lib/utils";
 import { usePathname, useRouter } from "next/navigation";
+import { useUserContext } from "@/context/UserContext";
+import { fetchUser } from "@/helpers/fetchUser";
 interface Props {
   btnTitle: string;
 }
 
-interface UserData {
-  _id: string;
-  email: string;
-  name: string;
-  bio: string;
-  image: string;
-}
-
 const AccountProfile = ({ btnTitle }: Props) => {
+  const { userData, setUserData } = useUserContext();
+
+  console.log("userContext onboarding page", userData);
+
   const [files, setFiles] = useState<File[]>([]);
-  const [user, setUser] = useState<UserData>({});
 
   const { startUpload } = useUploadThing("media");
 
@@ -66,41 +63,27 @@ const AccountProfile = ({ btnTitle }: Props) => {
     }
   };
 
-  const fetchUser = async () => {
-    try {
-      const response = await fetch(`/api/user`, {
-        cache: "no-store",
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch a user");
-      }
-      const responseData = await response.json();
-      setUser(responseData?.data);
-    } catch (error) {
-      console.log("Some error in fetching a user", error);
-    }
-  };
-
   useEffect(() => {
-    fetchUser();
+    if (!userData._id) {
+      fetchUser(setUserData);
+    }
   }, []);
 
   const { reset, ...form } = useForm({
     resolver: zodResolver(UserValidationSchema),
     defaultValues: useMemo(() => {
       return {
-        profile_photo: user?.image || "",
-        name: user?.name || "",
-        email: user?.email || "",
-        bio: user?.bio || "",
+        profile_photo: userData?.image || "",
+        name: userData?.name || "",
+        email: userData?.email || "",
+        bio: userData?.bio || "",
       };
-    }, [user]),
+    }, [userData]),
   });
 
   useEffect(() => {
-    reset(user);
-  }, [user]);
+    reset(userData);
+  }, [userData]);
 
   const onSubmit = async (values: z.infer<typeof UserValidationSchema>) => {
     const blob = values.profile_photo;
@@ -119,7 +102,7 @@ const AccountProfile = ({ btnTitle }: Props) => {
         method: "PUT",
         headers: { "Content-type": "application/json" },
         body: JSON.stringify({
-          userId: user._id,
+          userId: userData._id,
           email: values.email,
           name: values.name,
           bio: values.bio,
@@ -130,6 +113,19 @@ const AccountProfile = ({ btnTitle }: Props) => {
       if (!response.ok) {
         throw new Error("Failed to update user");
       }
+
+      const responseData = await response.json();
+
+      setUserData({
+        _id: responseData?.data?._id,
+        name: responseData?.data?.name,
+        email: responseData?.data?.email,
+        bio: responseData?.data?.bio,
+        image: responseData?.data?.image,
+        onboarded: responseData?.data?.onboarded,
+        posts: responseData?.data?.posts,
+        communities: responseData?.data?.communities,
+      });
       if (pathname === "/profile/edit") {
         router.back();
       } else {

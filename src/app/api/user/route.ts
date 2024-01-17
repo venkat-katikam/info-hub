@@ -25,17 +25,11 @@ export async function PUT(request: NextRequest) {
       { _id: userId },
       { email: email.toLowerCase(), name, bio, image, onboarded: true },
       { upsert: true }
-    );
+    ).select("-password");
     return NextResponse.json(
       {
         message: "User Updated",
-        data: {
-          id: user._id,
-          name: user.name,
-          email: user.email,
-          bio: user.bio,
-          image: user.image,
-        },
+        data: user,
       },
       { status: 200 }
     );

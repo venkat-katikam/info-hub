@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { LoginValidationSchema } from "@/lib/validations/user";
 import * as z from "zod";
+import { useUserContext } from "@/context/UserContext";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -19,6 +20,10 @@ import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 
 const LoginPage = () => {
+  const { userData, setUserData } = useUserContext();
+
+  console.log("userContext login page", userData);
+
   const router = useRouter();
 
   const form = useForm({
@@ -41,6 +46,16 @@ const LoginPage = () => {
       });
       if (response.ok) {
         const responseData = await response.json();
+        setUserData({
+          _id: responseData?.data?._id,
+          name: responseData?.data?.name,
+          email: responseData?.data?.email,
+          bio: responseData?.data?.bio,
+          image: responseData?.data?.image,
+          onboarded: responseData?.data?.onboarded,
+          posts: responseData?.data?.posts,
+          communities: responseData?.data?.communities,
+        });
 
         if (!responseData?.data?.onboarded) {
           router.push("/onboarding");
