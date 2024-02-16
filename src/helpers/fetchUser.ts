@@ -8,7 +8,7 @@ export const fetchUser = async (setUserData) => {
       throw new Error("Failed to fetch a user");
     }
     const responseData = await response.json();
-    console.log("responseData", responseData);
+
     setUserData({
       _id: responseData?.data?._id,
       name: responseData?.data?.name,

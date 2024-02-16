@@ -1,5 +1,6 @@
 "use client";
 import { sidebarLinks } from "@/constants";
+import { useUserContext } from "@/context/UserContext";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
@@ -7,7 +8,7 @@ import { useRouter, usePathname } from "next/navigation";
 function LeftSidebar() {
   const router = useRouter();
   const pathname = usePathname();
-  const isSignedIn = true;
+  const { userData } = useUserContext();
 
   const logoutHandler = async () => {
     const response = await fetch("/api/logout");
@@ -41,7 +42,7 @@ function LeftSidebar() {
       </div>
 
       {/* logout button */}
-      {isSignedIn && (
+      {userData._id && (
         <div className="mt-10 px-6">
           <div
             className="flex cursor-pointer gap-4 p-4"

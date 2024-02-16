@@ -6,12 +6,12 @@ export function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
   const isPublicPath =
-    path === "/login" || path === "/register" || path === "/out";
+    path === "/login" || path === "/register" || path === "/";
 
   const token = request.cookies.get("token")?.value || "";
 
   if (isPublicPath && token) {
-    return NextResponse.redirect(new URL("/", request.nextUrl));
+    return NextResponse.redirect(new URL("/home", request.nextUrl));
   }
 
   if (!isPublicPath && !token) {
@@ -27,6 +27,9 @@ export const config = {
     "/login",
     "/register",
     "/onboarding",
+    "/create-post",
+    "/home",
+    "/post/:id*",
     "/dashboard/:path*",
     "/addTodo",
     "/editTodo",

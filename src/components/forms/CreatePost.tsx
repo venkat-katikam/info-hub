@@ -25,8 +25,6 @@ import { fetchUser } from "@/helpers/fetchUser";
 function CreatePost() {
   const { userData, setUserData } = useUserContext();
 
-  console.log("userContext create post page", userData);
-
   const router = useRouter();
   const pathname = usePathname();
 
@@ -58,7 +56,7 @@ function CreatePost() {
       if (response.ok) {
         const responseData = await response.json();
 
-        router.push("/");
+        router.push("/home");
       } else {
         const responseData = await response.json();
       }

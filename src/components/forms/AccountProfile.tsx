@@ -31,8 +31,6 @@ interface Props {
 const AccountProfile = ({ btnTitle }: Props) => {
   const { userData, setUserData } = useUserContext();
 
-  console.log("userContext onboarding page", userData);
-
   const [files, setFiles] = useState<File[]>([]);
 
   const { startUpload } = useUploadThing("media");

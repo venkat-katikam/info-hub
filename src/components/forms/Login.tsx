@@ -22,7 +22,6 @@ import { useRouter } from "next/navigation";
 const LoginPage = () => {
   const { userData, setUserData } = useUserContext();
 
-  console.log("userContext login page", userData);
 
   const router = useRouter();
 
