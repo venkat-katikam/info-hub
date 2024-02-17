@@ -1,4 +1,4 @@
-export const fetchPosts = async (setPostsData) => {
+export const fetchPosts = async (setPostsData: any) => {
   try {
     const response = await fetch(`/api/post?pageNumber=1&pageSize=20`, {
       cache: "no-store",

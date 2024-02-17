@@ -1,4 +1,4 @@
-export const fetchUser = async (setUserData) => {
+export const fetchUser = async (setUserData: any) => {
   try {
     const response = await fetch(`/api/user`, {
       cache: "no-store",

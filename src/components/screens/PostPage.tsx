@@ -29,12 +29,36 @@ interface Post {
   }[];
   isComment?: boolean;
   text: string;
-  // children: React.ReactNode;
+  children: {
+    author: {
+      image: string;
+    };
+  }[];
 }
 
 const PostPage = ({ id }: { id: string }) => {
   const { userData, setUserData } = useUserContext();
-  const [post, setPost] = useState<Post>({});
+  const [post, setPost] = useState<Post>({
+    _id: "",
+    currentUsedId: "",
+    parentId: null,
+    content: "",
+    author: {
+      _id: "",
+      name: "",
+      image: "",
+    },
+    community: {
+      _id: "",
+      name: "",
+      image: "",
+    },
+    createdAt: "",
+    comments: [],
+    isComment: false,
+    text: "",
+    children: [],
+  });
 
   const fetchPostById = async () => {
     try {
