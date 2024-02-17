@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import UserStore from "@/context/UserContext";
 import PostStore from "@/context/PostContext";
+import Topbar from "@/components/shared/Topbar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,6 +22,7 @@ export default function RootLayout({
       <body className={`${inter.className} bg-dark-1`}>
         <UserStore>
           <PostStore>
+            <Topbar />
             <>{children}</>
           </PostStore>
         </UserStore>

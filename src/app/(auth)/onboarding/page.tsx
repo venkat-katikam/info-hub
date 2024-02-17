@@ -11,7 +11,7 @@ export default function Page() {
         <br />
         Please fill the below details to start
       </p>
-      <section className="mt-9 bg-dark-2 p-10">
+      <section className="mt-9 p-4 w-full">
         <AccountProfile btnTitle="Continue" />
       </section>
     </main>

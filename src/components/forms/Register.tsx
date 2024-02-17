@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const RegisterPage = () => {
   const router = useRouter();
@@ -64,7 +65,7 @@ const RegisterPage = () => {
           control={form.control}
           name="name"
           render={({ field }) => (
-            <FormItem className="flex flex-col justify-center gap-3 w-2/5">
+            <FormItem className="flex flex-col justify-center gap-3 w-full">
               <FormLabel className="text-base-semibold text-light-2">
                 Name
               </FormLabel>
@@ -83,7 +84,7 @@ const RegisterPage = () => {
           control={form.control}
           name="email"
           render={({ field }) => (
-            <FormItem className="flex flex-col justify-center gap-3 w-2/5">
+            <FormItem className="flex flex-col justify-center gap-3 w-full">
               <FormLabel className="text-base-semibold text-light-2">
                 Email
               </FormLabel>
@@ -103,7 +104,7 @@ const RegisterPage = () => {
           control={form.control}
           name="password"
           render={({ field }) => (
-            <FormItem className="flex flex-col gap-3 w-2/5">
+            <FormItem className="flex flex-col gap-3 w-full">
               <FormLabel className="text-base-semibold text-light-2">
                 Password
               </FormLabel>
@@ -120,6 +121,12 @@ const RegisterPage = () => {
         />
 
         <Button type="submit">Sign up</Button>
+        <p className="text-light-2">
+          Already Registered?{" "}
+          <Link href="/login" className="underline">
+            Login here
+          </Link>
+        </p>
       </form>
     </Form>
   );

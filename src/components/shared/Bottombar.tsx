@@ -8,7 +8,7 @@ import { usePathname } from "next/navigation";
 function Bottombar() {
   const pathname = usePathname();
   return (
-    <section className="bottombar">
+    <section className="bottombar flex justify-center md:hidden">
       <div className="bottombar_container">
         {sidebarLinks.map((link) => {
           const isActive =
@@ -26,7 +26,7 @@ function Bottombar() {
                 width={24}
                 height={24}
               />
-              <p className="text-subtle-medium text-light-1 max-sm:hidden">
+              <p className="text-[8px] tracking-widest text-light-1">
                 {link.label.split(/\s+/)[0]}
               </p>
             </Link>
