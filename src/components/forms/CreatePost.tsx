@@ -55,8 +55,7 @@ function CreatePost() {
 
       if (response.ok) {
         const responseData = await response.json();
-
-        router.push("/home");
+        router.push("/home?postCreated=true");
       } else {
         const responseData = await response.json();
       }

@@ -8,11 +8,12 @@ import { useRouter, usePathname } from "next/navigation";
 function LeftSidebar() {
   const router = useRouter();
   const pathname = usePathname();
-  const { userData } = useUserContext();
+  const { userData, setUserData } = useUserContext();
 
   const logoutHandler = async () => {
     const response = await fetch("/api/logout");
     const responseData = await response.json();
+    setUserData({});
     router.push("/login");
   };
 

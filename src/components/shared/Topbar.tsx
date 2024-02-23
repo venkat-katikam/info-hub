@@ -5,12 +5,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 function Topbar() {
-  const { userData } = useUserContext();
+  const { userData, setUserData } = useUserContext();
   const router = useRouter();
 
   const logoutHandler = async () => {
     const response = await fetch("/api/logout");
     const responseData = await response.json();
+    setUserData({});
     router.push("/login");
   };
   return (

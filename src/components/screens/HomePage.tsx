@@ -6,6 +6,7 @@ import { usePostContext } from "@/context/PostContext";
 import { fetchUser } from "@/helpers/fetchUser";
 import PostCard from "../cards/PostCard";
 import { fetchPosts } from "@/helpers/fetchPosts";
+import { useSearchParams } from "next/navigation";
 
 interface Post {
   _id: string;
@@ -38,6 +39,9 @@ const HomePage = () => {
   const { postsData, setPostsData } = usePostContext();
   // const [posts, setPosts] = useState<Array<Post>>([]);
 
+  const searchParams = useSearchParams();
+  const postCreated = searchParams.get("postCreated");
+
   useEffect(() => {
     if (!userData._id) {
       fetchUser(setUserData);
@@ -45,7 +49,7 @@ const HomePage = () => {
   }, []);
 
   useEffect(() => {
-    if (postsData.length === 0) {
+    if (postsData.length === 0 || postCreated === "true") {
       fetchPosts(setPostsData);
     }
   }, []);
