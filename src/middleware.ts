@@ -30,6 +30,7 @@ export const config = {
     "/create-post",
     "/home",
     "/post/:id*",
+    "/profile/:id*",
     "/dashboard/:path*",
     "/addTodo",
     "/editTodo",

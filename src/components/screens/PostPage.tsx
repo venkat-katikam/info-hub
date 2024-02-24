@@ -5,6 +5,7 @@ import { useUserContext } from "@/context/UserContext";
 import { fetchUser } from "@/helpers/fetchUser";
 import PostCard from "../cards/PostCard";
 import { redirect } from "next/navigation";
+import Comment from "../forms/Comment";
 
 interface Post {
   _id: string;
@@ -38,6 +39,7 @@ interface Post {
 
 const PostPage = ({ id }: { id: string }) => {
   const { userData, setUserData } = useUserContext();
+  const [commentAdded, setCommentAdded] = useState(false);
   const [post, setPost] = useState<Post>({
     _id: "",
     currentUsedId: "",
@@ -85,7 +87,7 @@ const PostPage = ({ id }: { id: string }) => {
 
   useEffect(() => {
     fetchPostById();
-  }, []);
+  }, [commentAdded]);
 
   return (
     <>
@@ -103,6 +105,31 @@ const PostPage = ({ id }: { id: string }) => {
               createdAt={post.createdAt}
               comments={post.children}
             />
+          </div>
+          <div className="mt-7">
+            <Comment
+              postId={post._id}
+              currentUserImg={userData.image}
+              currentUserId={JSON.stringify(userData._id)}
+              setCommentAdded={setCommentAdded}
+            />
+          </div>
+          <div className="text-base-semibold text-light-2 mt-5">Comments</div>
+          <div className="mt-10">
+            {post.children.map((childItem: any) => (
+              <PostCard
+                key={childItem._id}
+                id={childItem._id}
+                currentUsedId={userData._id || ""}
+                parentId={childItem.parentId}
+                content={childItem.text}
+                author={childItem.author}
+                community={childItem.community}
+                createdAt={childItem.createdAt}
+                comments={childItem.children}
+                isComment
+              />
+            ))}
           </div>
         </section>
       )}

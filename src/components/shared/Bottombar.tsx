@@ -1,12 +1,14 @@
 "use client";
 
 import { sidebarLinks } from "@/constants";
+import { useUserContext } from "@/context/UserContext";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 function Bottombar() {
   const pathname = usePathname();
+  const { userData } = useUserContext();
   return (
     <section className="bottombar flex justify-center md:hidden">
       <div className="bottombar_container">
@@ -16,7 +18,11 @@ function Bottombar() {
             pathname === link.route;
           return (
             <Link
-              href={link.route}
+              href={
+                link.route === "/profile"
+                  ? `/profile/${userData._id}`
+                  : link.route
+              }
               key={link.label}
               className={`bottombar_link ${isActive && "bg-primary-500"}`}
             >

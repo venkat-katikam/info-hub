@@ -26,7 +26,11 @@ function LeftSidebar() {
             pathname === link.route;
           return (
             <Link
-              href={link.route}
+              href={
+                link.route === "/profile"
+                  ? `/profile/${userData._id}`
+                  : link.route
+              }
               key={link.label}
               className={`leftsidebar_link ${isActive && "bg-primary-500"}`}
             >
