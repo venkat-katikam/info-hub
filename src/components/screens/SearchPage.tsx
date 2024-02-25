@@ -1,11 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import ProfileHeader from "../shared/ProfileHeader";
 import { useUserContext } from "@/context/UserContext";
 import { fetchUser } from "@/helpers/fetchUser";
-import { profileTabs } from "@/constants";
-import Image from "next/image";
 import UserCard from "../cards/UserCard";
 
 interface User {
