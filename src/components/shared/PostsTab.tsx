@@ -9,7 +9,7 @@ interface Props {
 
 interface Post {
   _id: string;
-  currentUsedId: string;
+  currentUserId: string;
   parentId: string | null;
   content: string;
   author: {
@@ -79,7 +79,8 @@ const PostsTab = ({ currentUserId, accountId, accountType }: Props) => {
         <PostCard
           key={post._id}
           id={post._id}
-          currentUsedId={currentUserId}
+          currentUserId={currentUserId}
+          accountId={accountId}
           parentId={post.parentId}
           content={post.text}
           author={

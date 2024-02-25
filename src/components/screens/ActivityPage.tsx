@@ -5,6 +5,7 @@ import { useUserContext } from "@/context/UserContext";
 import { fetchUser } from "@/helpers/fetchUser";
 import Link from "next/link";
 import Image from "next/image";
+import { formatDateString } from "@/lib/utils";
 
 interface Author {
   _id: string;
@@ -17,7 +18,7 @@ interface Activity {
   author: Author;
   parentId: string;
   text: string;
-  createdAt: Date;
+  createdAt: string;
 }
 
 const ActivityPage = () => {
@@ -70,10 +71,7 @@ const ActivityPage = () => {
                   <span className="mr-1 text-primary-500">
                     {activity.author.name}
                   </span>{" "}
-                  replied to your post on{" "}
-                  {new Date(activity.createdAt).toLocaleString(undefined, {
-                    timeZone: "UTC",
-                  })}
+                  replied to your post at {formatDateString(activity.createdAt)}
                 </p>
               </article>
             </Link>

@@ -10,7 +10,7 @@ import { useSearchParams } from "next/navigation";
 
 interface Post {
   _id: string;
-  currentUsedId: string;
+  currentUserId: string;
   parentId: string | null;
   content: string;
   author: {
@@ -65,7 +65,7 @@ const HomePage = () => {
               <PostCard
                 key={post._id}
                 id={post._id}
-                currentUsedId={userData._id || ""}
+                currentUserId={userData._id || ""}
                 parentId={post.parentId}
                 content={post.text}
                 author={post.author}

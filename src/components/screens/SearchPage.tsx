@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 import { useUserContext } from "@/context/UserContext";
 import { fetchUser } from "@/helpers/fetchUser";
 import UserCard from "../cards/UserCard";
+import Image from "next/image";
+import { Input } from "../ui/input";
 
 interface User {
   _id: string;
@@ -19,6 +21,7 @@ interface User {
 const SearchPage = () => {
   const { userData, setUserData } = useUserContext();
   const [users, setUsers] = useState<Array<User>>([]);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     if (!userData._id) {
@@ -54,21 +57,41 @@ const SearchPage = () => {
   return (
     <section>
       <h1>Search page</h1>
+      <div className="searchbar">
+        <Image
+          src="/assets/search-gray.svg"
+          alt="search"
+          width={24}
+          height={24}
+          className="object-contain"
+        />
+        <Input
+          id="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder={"Search the user name here ..."}
+          className="no-focus searchbar_input"
+        />
+      </div>
       <div className="mt-14 flex flex-col gap-9">
         {users.length === 0 ? (
           <p className="no-result">No Result</p>
         ) : (
           <>
-            {users.map((person) => (
-              <UserCard
-                key={person._id}
-                id={person._id}
-                name={person.name}
-                email={person.email}
-                image={person.image}
-                personType="User"
-              />
-            ))}
+            {users
+              .filter((filteredUser) =>
+                filteredUser.name.toLowerCase().includes(search.toLowerCase())
+              )
+              .map((person) => (
+                <UserCard
+                  key={person._id}
+                  id={person._id}
+                  name={person.name}
+                  email={person.email}
+                  image={person.image}
+                  personType="User"
+                />
+              ))}
           </>
         )}
       </div>

@@ -9,7 +9,7 @@ import Comment from "../forms/Comment";
 
 interface Post {
   _id: string;
-  currentUsedId: string;
+  currentUserId: string;
   parentId: string | null;
   content: string;
   author: {
@@ -42,7 +42,7 @@ const PostPage = ({ id }: { id: string }) => {
   const [commentAdded, setCommentAdded] = useState(0);
   const [post, setPost] = useState<Post>({
     _id: "",
-    currentUsedId: "",
+    currentUserId: "",
     parentId: null,
     content: "",
     author: {
@@ -97,7 +97,7 @@ const PostPage = ({ id }: { id: string }) => {
             <PostCard
               key={post._id}
               id={post._id}
-              currentUsedId={userData._id || ""}
+              currentUserId={userData._id || ""}
               parentId={post.parentId}
               content={post.text}
               author={post.author}
@@ -121,13 +121,14 @@ const PostPage = ({ id }: { id: string }) => {
               <PostCard
                 key={childItem._id}
                 id={childItem._id}
-                currentUsedId={userData._id || ""}
+                currentUserId={userData._id || ""}
                 parentId={childItem.parentId}
                 content={childItem.text}
                 author={childItem.author}
                 community={childItem.community}
                 createdAt={childItem.createdAt}
                 comments={childItem.children}
+                accountId={childItem.author._id}
                 isComment
               />
             ))}
