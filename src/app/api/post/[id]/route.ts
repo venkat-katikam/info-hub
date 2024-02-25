@@ -16,7 +16,7 @@ export async function GET(
         path: "author",
         model: User,
         select: "_id id name image",
-      }) // Populate the author field with _id and username
+      }) // Populate the author field with _id and name
       //   .populate({
       //     path: "community",
       //     model: Community,
@@ -28,7 +28,7 @@ export async function GET(
           {
             path: "author", // Populate the author field within children
             model: User,
-            select: "_id id name parentId image", // Select only _id and username fields of the author
+            select: "_id id name parentId image", // Select only _id and name fields of the author
           },
           {
             path: "children", // Populate the children field within children
@@ -36,7 +36,7 @@ export async function GET(
             populate: {
               path: "author", // Populate the author field within nested children
               model: User,
-              select: "_id id name parentId image", // Select only _id and username fields of the author
+              select: "_id id name parentId image", // Select only _id and name fields of the author
             },
           },
         ],

@@ -27,6 +27,7 @@ interface Props {
   postId: string;
   currentUserImg: string;
   currentUserId: string;
+  commentAdded: number;
   setCommentAdded: any;
 }
 
@@ -34,17 +35,11 @@ const Comment = ({
   postId,
   currentUserImg,
   currentUserId,
+  commentAdded,
   setCommentAdded,
 }: Props) => {
-  // const { userData, setUserData } = useUserContext();
   const router = useRouter();
   const pathname = usePathname();
-
-  //   useEffect(() => {
-  //     if (!userData._id) {
-  //       fetchUser(setUserData);
-  //     }
-  //   }, []);
 
   const form = useForm({
     resolver: zodResolver(CommentValidationSchema),
@@ -66,7 +61,7 @@ const Comment = ({
       });
       if (response.ok) {
         const responseData = await response.json();
-        setCommentAdded(true);
+        setCommentAdded(commentAdded + 1);
         router.push(`/post/${postId}`);
       } else {
         const responseData = await response.json();

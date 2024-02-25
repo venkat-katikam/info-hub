@@ -39,7 +39,7 @@ interface Post {
 
 const PostPage = ({ id }: { id: string }) => {
   const { userData, setUserData } = useUserContext();
-  const [commentAdded, setCommentAdded] = useState(false);
+  const [commentAdded, setCommentAdded] = useState(0);
   const [post, setPost] = useState<Post>({
     _id: "",
     currentUsedId: "",
@@ -111,6 +111,7 @@ const PostPage = ({ id }: { id: string }) => {
               postId={post._id}
               currentUserImg={userData.image}
               currentUserId={JSON.stringify(userData._id)}
+              commentAdded={commentAdded}
               setCommentAdded={setCommentAdded}
             />
           </div>

@@ -98,13 +98,12 @@ const PostCard = ({
                   className="cursor-pointer object-contain"
                 />
               </div>
-              {isComment && comments.length > 0 && (
-                <Link href={`/post/${id}`}>
-                  <p className="text-subtle-medium text-gray-1">
-                    {comments.length} replies
-                  </p>
-                </Link>
-              )}
+
+              <Link href={`/post/${id}`}>
+                <p className="text-subtle-medium text-gray-1">
+                  {comments.length} likes & {comments.length} replies
+                </p>
+              </Link>
             </div>
           </div>
         </div>

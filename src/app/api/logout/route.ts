@@ -1,4 +1,7 @@
+import { connectMongoDB } from "@/dbConfig/dbConfig";
 import { NextResponse } from "next/server";
+
+connectMongoDB();
 
 export async function GET() {
   try {
