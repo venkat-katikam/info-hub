@@ -122,7 +122,6 @@ const AccountProfile = ({ btnTitle }: Props) => {
         image: responseData?.data?.image,
         onboarded: responseData?.data?.onboarded,
         posts: responseData?.data?.posts,
-        communities: responseData?.data?.communities,
       });
       if (pathname === "/profile/edit") {
         router.back();

@@ -13,11 +13,6 @@ interface Props {
     name: string;
     image: string;
   };
-  community: {
-    _id: string;
-    name: string;
-    image: string;
-  } | null;
   createdAt: string;
   comments: {
     author: {
@@ -34,7 +29,6 @@ const PostCard = ({
   parentId,
   content,
   author,
-  community,
   createdAt,
   comments,
   isComment,

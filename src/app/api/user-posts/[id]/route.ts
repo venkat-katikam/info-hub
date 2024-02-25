@@ -10,7 +10,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   // find all post authrized by user with given userId
-  //TODO: populate community
+
   const { id } = params;
   try {
     const posts = await User.findOne({ _id: id }).populate({

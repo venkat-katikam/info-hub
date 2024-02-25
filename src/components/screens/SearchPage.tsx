@@ -15,7 +15,6 @@ interface User {
   image: string;
   onboarded: boolean;
   posts: string[];
-  // communities: responseData?.data?.communities,
 }
 
 const SearchPage = () => {

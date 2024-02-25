@@ -13,15 +13,10 @@ export async function GET(
   try {
     const post = await Post.findById(id)
       .populate({
-        path: "author",
+        path: "author", // Populate the author field with _id and name
         model: User,
         select: "_id id name image",
-      }) // Populate the author field with _id and name
-      //   .populate({
-      //     path: "community",
-      //     model: Community,
-      //     select: "_id id name image",
-      //   }) // Populate the community field with _id and name
+      })
       .populate({
         path: "children", // Populate the children field
         populate: [

@@ -17,7 +17,6 @@ export const fetchUser = async (setUserData: any) => {
       image: responseData?.data?.image,
       onboarded: responseData?.data?.onboarded,
       posts: responseData?.data?.posts,
-      communities: responseData?.data?.communities,
     });
     return responseData?.data;
   } catch (error: any) {

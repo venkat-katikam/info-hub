@@ -49,7 +49,6 @@ function CreatePost() {
         body: JSON.stringify({
           text: values.post,
           author: userData._id,
-          communityId: null,
         }),
       });
 

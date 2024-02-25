@@ -24,12 +24,6 @@ const userSchema = new Schema(
       },
     ],
     onboarded: { type: Boolean, default: false },
-    communities: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Community",
-      },
-    ],
   },
   { timestamps: true }
 );

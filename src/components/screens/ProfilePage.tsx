@@ -17,7 +17,6 @@ interface User {
   image: string;
   onboarded: boolean;
   posts: string[];
-  // communities: responseData?.data?.communities,
 }
 
 const ProfilePage = ({ userId }: { userId: string }) => {
@@ -56,7 +55,6 @@ const ProfilePage = ({ userId }: { userId: string }) => {
         image: responseData?.data?.image,
         onboarded: responseData?.data?.onboarded,
         posts: responseData?.data?.posts,
-        // communities: responseData?.data?.communities,
       });
       return responseData?.data;
     } catch (error: any) {

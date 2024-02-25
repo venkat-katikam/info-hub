@@ -53,7 +53,6 @@ const LoginPage = () => {
           image: responseData?.data?.image,
           onboarded: responseData?.data?.onboarded,
           posts: responseData?.data?.posts,
-          communities: responseData?.data?.communities,
         });
 
         if (!responseData?.data?.onboarded) {

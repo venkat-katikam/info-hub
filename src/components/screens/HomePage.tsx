@@ -18,11 +18,6 @@ interface Post {
     name: string;
     image: string;
   };
-  community: {
-    _id: string;
-    name: string;
-    image: string;
-  } | null;
   createdAt: string;
   comments: {
     author: {
@@ -69,7 +64,6 @@ const HomePage = () => {
                 parentId={post.parentId}
                 content={post.text}
                 author={post.author}
-                community={post.community}
                 createdAt={post.createdAt}
                 comments={post.children}
               />

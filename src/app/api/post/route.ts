@@ -7,12 +7,11 @@ connectMongoDB();
 
 export async function POST(req: NextRequest) {
   try {
-    const { text, author, communityId } = await req.json();
+    const { text, author } = await req.json();
 
     const createdPost = await await Post.create({
       text,
       author,
-      community: null,
     });
 
     await User.findByIdAndUpdate(author, {
@@ -46,10 +45,6 @@ export async function GET(req: NextRequest) {
         path: "author",
         model: User,
       })
-      // .populate({
-      //   path: "community",
-      //   model: Community,
-      // })
       .populate({
         path: "children", // Populate the children field
         populate: {

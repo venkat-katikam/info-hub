@@ -51,7 +51,6 @@ export async function POST(req: NextRequest) {
           image: user.image,
           onboarded: user.onboarded,
           posts: user.posts,
-          communities: user.communities,
         },
       },
       { status: 200 }
