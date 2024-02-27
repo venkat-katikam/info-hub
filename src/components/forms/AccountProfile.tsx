@@ -126,7 +126,7 @@ const AccountProfile = ({ btnTitle }: Props) => {
       if (pathname === "/profile/edit") {
         router.back();
       } else {
-        router.push("/");
+        router.push("/home");
       }
     } catch (error) {
       console.log("Some error in updating user", error);

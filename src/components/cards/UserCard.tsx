@@ -2,6 +2,7 @@
 import Image from "next/image";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface Props {
   id: string;
@@ -16,13 +17,14 @@ const UserCard = ({ id, name, email, image, personType }: Props) => {
   return (
     <article className="user-card">
       <div className="user-card_avatar">
-        <Image
-          src={image}
-          alt="logo"
-          width={48}
-          height={48}
-          className="rounded-full"
-        />
+        <Link href={`/profile/${id}`} className="relative h-11 w-11">
+          <Image
+            src={image}
+            alt="logo"
+            fill
+            className="curson-pointer rounded-full"
+          />{" "}
+        </Link>
         <div className="flex-1 text-ellipsis">
           <h4 className="text-base-semibold text-light-1">{name}</h4>
           <p className="text-small-medium text-gray-1">@{email}</p>

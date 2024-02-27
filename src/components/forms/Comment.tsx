@@ -81,13 +81,14 @@ const Comment = ({
             render={({ field }) => (
               <FormItem className="flex w-full items-center gap-3 ">
                 <FormLabel>
-                  <Image
-                    src={currentUserImg}
-                    alt="Profile Photo"
-                    width={48}
-                    height={48}
-                    className="rounded-full object-cover"
-                  />
+                  <div className="relative h-11 w-11">
+                    <Image
+                      src={currentUserImg}
+                      alt="Profile Photo"
+                      fill
+                      className="rounded-full object-cover"
+                    />
+                  </div>
                 </FormLabel>
                 <FormControl className="border-none bg-transparent">
                   <Input

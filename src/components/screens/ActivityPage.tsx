@@ -60,13 +60,14 @@ const ActivityPage = () => {
           {activity.map((activity) => (
             <Link key={activity._id} href={`/post/${activity.parentId}`}>
               <article className="activity-card">
-                <Image
-                  src={activity.author.image}
-                  alt="Profile picture"
-                  width={20}
-                  height={20}
-                  className="rounded-full object-cover"
-                />
+                <div className="relative h-11 w-11">
+                  <Image
+                    src={activity.author.image}
+                    alt="Profile picture"
+                    fill
+                    className="rounded-full object-cover"
+                  />
+                </div>
                 <p className="!text-small-regular text-light-1 ml-5">
                   <span className="mr-1 text-primary-500">
                     {activity.author.name}
