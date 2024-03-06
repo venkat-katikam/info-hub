@@ -8,6 +8,8 @@ import { Tabs, TabsList, TabsContent, TabsTrigger } from "@/components/ui/tabs";
 import { profileTabs } from "@/constants";
 import Image from "next/image";
 import PostsTab from "../shared/PostsTab";
+import { ProfileSkeleton } from "../shared/Skeletons";
+import { ProgressBar } from "../shared/Progressbar";
 
 interface User {
   _id: string;
@@ -31,14 +33,18 @@ const ProfilePage = ({ userId }: { userId: string }) => {
     posts: [],
   });
 
+  const [accountUserLoading, setAccountUserLoading] = useState(false);
+  const [userLoading, setUserLoading] = useState(false);
+
   useEffect(() => {
     if (!userData._id) {
-      fetchUser(setUserData);
+      fetchUser(setUserData, setUserLoading);
     }
   }, []);
 
   const fetchUserById = async (userId: string) => {
     try {
+      setAccountUserLoading(true);
       const response = await fetch(`/api/user/${userId}`, {
         cache: "no-store",
       });
@@ -59,6 +65,8 @@ const ProfilePage = ({ userId }: { userId: string }) => {
       return responseData?.data;
     } catch (error: any) {
       return { errorMessage: "Some error in fetching a user", error };
+    } finally {
+      setAccountUserLoading(false);
     }
   };
   useEffect(() => {
@@ -68,14 +76,23 @@ const ProfilePage = ({ userId }: { userId: string }) => {
   }, [userId]);
   return (
     <section>
-      <ProfileHeader
-        accountId={accountUser._id}
-        authUserId={userData._id}
-        name={accountUser.name}
-        email={accountUser.email}
-        image={accountUser.image}
-        bio={accountUser.bio}
-      />
+      {userLoading && (
+        <div className="mb-5">
+          <ProgressBar />
+        </div>
+      )}
+      {accountUserLoading ? (
+        <ProfileSkeleton />
+      ) : (
+        <ProfileHeader
+          accountId={accountUser._id}
+          authUserId={userData._id}
+          name={accountUser.name}
+          email={accountUser.email}
+          image={accountUser.image}
+          bio={accountUser.bio}
+        />
+      )}
       <div className="mt-9">
         <Tabs defaultValue="posts" className="w-full">
           <TabsList className="tab">

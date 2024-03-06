@@ -1,5 +1,6 @@
-export const fetchPosts = async (setPostsData: any) => {
+export const fetchPosts = async (setPostsData: any, setPostLoading: any) => {
   try {
+    setPostLoading(true);
     const response = await fetch(`/api/post?pageNumber=1&pageSize=20`, {
       cache: "no-store",
     });
@@ -12,5 +13,7 @@ export const fetchPosts = async (setPostsData: any) => {
     setPostsData(responseData.posts);
   } catch (error) {
     return { errorMessage: "Some error in fetching a posts", error };
+  } finally {
+    setPostLoading(false);
   }
 };

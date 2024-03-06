@@ -6,6 +6,8 @@ import { fetchUser } from "@/helpers/fetchUser";
 import Link from "next/link";
 import Image from "next/image";
 import { formatDateString } from "@/lib/utils";
+import { ActivitySkeleton } from "../shared/Skeletons";
+import { ProgressBar } from "../shared/Progressbar";
 
 interface Author {
   _id: string;
@@ -24,16 +26,19 @@ interface Activity {
 const ActivityPage = () => {
   const { userData, setUserData } = useUserContext();
   const [activity, setActivity] = useState<Array<Activity>>([]);
+  const [activityLoading, setActivityLoading] = useState(false);
+  const [userLoading, setUserLoading] = useState(false);
 
   useEffect(() => {
     if (!userData._id) {
-      fetchUser(setUserData);
+      fetchUser(setUserData, setUserLoading);
     }
   }, []);
 
   // fetch activity
   const fetchActivity = async () => {
     try {
+      setActivityLoading(true);
       const response = await fetch(`/api/activity/${userData._id}`, {
         cache: "no-store",
       });
@@ -45,6 +50,8 @@ const ActivityPage = () => {
       setActivity([...responseData.data]);
     } catch (error: any) {
       return { errorMessage: "Some error in fetching a user", error };
+    } finally {
+      setActivityLoading(false);
     }
   };
   useEffect(() => {
@@ -55,7 +62,12 @@ const ActivityPage = () => {
 
   return (
     <section className="mt-10 flex flex-col gap-5">
-      {activity.length > 0 ? (
+      {userLoading && <ProgressBar />}
+
+      {activityLoading && <ActivitySkeleton count={3} />}
+      {!activityLoading && activity.length === 0 ? (
+        <p className="!text-base-regular text-light-3 ">No activity yet</p>
+      ) : (
         <>
           {activity.map((activity) => (
             <Link key={activity._id} href={`/post/${activity.parentId}`}>
@@ -78,8 +90,6 @@ const ActivityPage = () => {
             </Link>
           ))}
         </>
-      ) : (
-        <p className="!text-base-regular text-light-3 ">No activity yet</p>
       )}
     </section>
   );

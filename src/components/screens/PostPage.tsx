@@ -6,6 +6,8 @@ import { fetchUser } from "@/helpers/fetchUser";
 import PostCard from "../cards/PostCard";
 import { redirect } from "next/navigation";
 import Comment from "../forms/Comment";
+import { PostSkeleton, SearchUserSkeleton } from "../shared/Skeletons";
+import { ProgressBar } from "../shared/Progressbar";
 
 interface Post {
   _id: string;
@@ -52,8 +54,12 @@ const PostPage = ({ id }: { id: string }) => {
     children: [],
   });
 
+  const [postLoading, setPostLoading] = useState(false);
+  const [userLoading, setUserLoading] = useState(false);
+
   const fetchPostById = async () => {
     try {
+      setPostLoading(true);
       const response = await fetch(`/api/post/${id}`, {
         cache: "no-store",
       });
@@ -66,12 +72,14 @@ const PostPage = ({ id }: { id: string }) => {
       setPost(responseData.post);
     } catch (error) {
       return { errorMessage: "Some error in fetching a post", error };
+    } finally {
+      setPostLoading(false);
     }
   };
 
   useEffect(() => {
     if (!userData._id) {
-      fetchUser(setUserData);
+      fetchUser(setUserData, setUserLoading);
     }
   }, []);
 
@@ -81,19 +89,24 @@ const PostPage = ({ id }: { id: string }) => {
 
   return (
     <>
+      {userLoading && <ProgressBar />}
       {Object.keys(post).length !== 0 && (
         <section className="relative">
           <div>
-            <PostCard
-              key={post._id}
-              id={post._id}
-              currentUserId={userData._id || ""}
-              parentId={post.parentId}
-              content={post.text}
-              author={post.author}
-              createdAt={post.createdAt}
-              comments={post.children}
-            />
+            {postLoading ? (
+              <PostSkeleton />
+            ) : (
+              <PostCard
+                key={post._id}
+                id={post._id}
+                currentUserId={userData._id || ""}
+                parentId={post.parentId}
+                content={post.text}
+                author={post.author}
+                createdAt={post.createdAt}
+                comments={post.children}
+              />
+            )}
           </div>
           <div className="mt-7">
             <Comment
@@ -106,6 +119,7 @@ const PostPage = ({ id }: { id: string }) => {
           </div>
           <div className="text-base-semibold text-light-2 mt-5">Comments</div>
           <div className="mt-10">
+            {post.children.length === 0 && <PostSkeleton count={2} />}
             {post.children.map((childItem: any) => (
               <PostCard
                 key={childItem._id}

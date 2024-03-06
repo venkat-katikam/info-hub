@@ -30,6 +30,7 @@ interface Props {
 
 const AccountProfile = ({ btnTitle }: Props) => {
   const { userData, setUserData } = useUserContext();
+  const [userLoading, setUserLoading] = useState(false);
 
   const [files, setFiles] = useState<File[]>([]);
 
@@ -63,7 +64,7 @@ const AccountProfile = ({ btnTitle }: Props) => {
 
   useEffect(() => {
     if (!userData._id) {
-      fetchUser(setUserData);
+      fetchUser(setUserData, setUserLoading);
     }
   }, []);
 

@@ -6,6 +6,8 @@ import { fetchUser } from "@/helpers/fetchUser";
 import UserCard from "../cards/UserCard";
 import Image from "next/image";
 import { Input } from "../ui/input";
+import { SearchUserSkeleton } from "../shared/Skeletons";
+import { ProgressBar } from "../shared/Progressbar";
 
 interface User {
   _id: string;
@@ -21,16 +23,19 @@ const SearchPage = () => {
   const { userData, setUserData } = useUserContext();
   const [users, setUsers] = useState<Array<User>>([]);
   const [search, setSearch] = useState("");
+  const [userLoading, setUserLoading] = useState(false);
+  const [allUserLoading, setAllUserLoading] = useState(false);
 
   useEffect(() => {
     if (!userData._id) {
-      fetchUser(setUserData);
+      fetchUser(setUserData, setUserLoading);
     }
   }, []);
 
   // fetch all users
   const fetchAllUsers = async () => {
     try {
+      setAllUserLoading(true);
       const response = await fetch(
         `/api/all-users?userId=&${
           userData._id
@@ -47,6 +52,8 @@ const SearchPage = () => {
       setUsers([...responseData.data.users]);
     } catch (error: any) {
       return { errorMessage: "Some error in fetching a user", error };
+    } finally {
+      setAllUserLoading(false);
     }
   };
   useEffect(() => {
@@ -56,6 +63,7 @@ const SearchPage = () => {
   return (
     <section>
       <h1>Search page</h1>
+      {userLoading && <ProgressBar />}
       <div className="searchbar">
         <Image
           src="/assets/search-gray.svg"
@@ -73,7 +81,8 @@ const SearchPage = () => {
         />
       </div>
       <div className="mt-14 flex flex-col gap-9">
-        {users.length === 0 ? (
+        {allUserLoading && <SearchUserSkeleton count={10} />}
+        {!allUserLoading && users.length === 0 ? (
           <p className="no-result">No Result</p>
         ) : (
           <>

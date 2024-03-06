@@ -1,5 +1,6 @@
-export const fetchUser = async (setUserData: any) => {
+export const fetchUser = async (setUserData: any, setUserLoading: any) => {
   try {
+    setUserLoading(true);
     const response = await fetch(`/api/user`, {
       cache: "no-store",
     });
@@ -21,5 +22,7 @@ export const fetchUser = async (setUserData: any) => {
     return responseData?.data;
   } catch (error: any) {
     return { errorMessage: "Some error in fetching a user", error };
+  } finally {
+    setUserLoading(false);
   }
 };

@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import PostCard from "../cards/PostCard";
+import { PostSkeleton } from "./Skeletons";
 interface Props {
   currentUserId: string;
   accountId: string;
@@ -39,9 +40,11 @@ const PostsTab = ({ currentUserId, accountId, accountType }: Props) => {
     image: "",
     _id: "",
   });
+  const [postLoading, setPostLoading] = useState(false);
 
   const fetchUserPosts = async (userId: string) => {
     try {
+      setPostLoading(true);
       const response = await fetch(`/api/user-posts/${userId}`, {
         cache: "no-store",
       });
@@ -59,6 +62,8 @@ const PostsTab = ({ currentUserId, accountId, accountType }: Props) => {
       setUserPosts([...responseData?.data?.posts]);
     } catch (error: any) {
       return { errorMessage: "Some error in fetching a user", error };
+    } finally {
+      setPostLoading(false);
     }
   };
 
@@ -70,31 +75,33 @@ const PostsTab = ({ currentUserId, accountId, accountType }: Props) => {
 
   return (
     <section className="mt-9 flex flex-col gap-10">
-      {userPosts.map((post: any) => (
-        <PostCard
-          key={post._id}
-          id={post._id}
-          currentUserId={currentUserId}
-          accountId={accountId}
-          parentId={post.parentId}
-          content={post.text}
-          author={
-            accountType === "User"
-              ? {
-                  name: userPostsData.name,
-                  image: userPostsData.image,
-                  _id: userPostsData._id,
-                }
-              : {
-                  name: post.author.name,
-                  image: post.author.image,
-                  _id: post.author._id,
-                }
-          }
-          createdAt={post.createdAt}
-          comments={post.children}
-        />
-      ))}
+      {postLoading && <PostSkeleton count={4} />}
+      {!postLoading &&
+        userPosts.map((post: any) => (
+          <PostCard
+            key={post._id}
+            id={post._id}
+            currentUserId={currentUserId}
+            accountId={accountId}
+            parentId={post.parentId}
+            content={post.text}
+            author={
+              accountType === "User"
+                ? {
+                    name: userPostsData.name,
+                    image: userPostsData.image,
+                    _id: userPostsData._id,
+                  }
+                : {
+                    name: post.author.name,
+                    image: post.author.image,
+                    _id: post.author._id,
+                  }
+            }
+            createdAt={post.createdAt}
+            comments={post.children}
+          />
+        ))}
     </section>
   );
 };

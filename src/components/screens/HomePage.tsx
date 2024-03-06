@@ -7,6 +7,8 @@ import { fetchUser } from "@/helpers/fetchUser";
 import PostCard from "../cards/PostCard";
 import { fetchPosts } from "@/helpers/fetchPosts";
 import { useSearchParams } from "next/navigation";
+import { PostSkeleton } from "@/components/shared/Skeletons";
+import { ProgressBar } from "../shared/Progressbar";
 
 interface Post {
   _id: string;
@@ -32,28 +34,31 @@ interface Post {
 const HomePage = () => {
   const { userData, setUserData } = useUserContext();
   const { postsData, setPostsData } = usePostContext();
-  // const [posts, setPosts] = useState<Array<Post>>([]);
+  const [postLoading, setPostLoading] = useState(false);
+  const [userLoading, setUserLoading] = useState(false);
 
   const searchParams = useSearchParams();
   const postCreated = searchParams.get("postCreated");
 
   useEffect(() => {
     if (!userData._id) {
-      fetchUser(setUserData);
+      fetchUser(setUserData, setUserLoading);
     }
   }, []);
 
   useEffect(() => {
     if (postsData.length === 0 || postCreated === "true") {
-      fetchPosts(setPostsData);
+      fetchPosts(setPostsData, setPostLoading);
     }
   }, []);
 
   return (
     <>
       <section className="mt-9 flex flex-col gap-10">
-        {postsData.length === 0 ? (
-          <p className="no-result">No Posts</p>
+        {userLoading && <ProgressBar />}
+        {postLoading && <PostSkeleton count={4} />}
+        {!postLoading && postsData.length === 0 ? (
+          <p className="no-result">No posts yet</p>
         ) : (
           <>
             {postsData.map((post: any) => (
