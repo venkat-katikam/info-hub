@@ -7,7 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { formatDateString } from "@/lib/utils";
 import { ActivitySkeleton } from "../shared/Skeletons";
-import { ProgressBar } from "../shared/Progressbar";
+import { LoadingDots } from "../shared/LoadingDots";
 
 interface Author {
   _id: string;
@@ -62,7 +62,7 @@ const ActivityPage = () => {
 
   return (
     <section className="mt-10 flex flex-col gap-5">
-      {userLoading && <ProgressBar />}
+      {userLoading && <LoadingDots />}
 
       {activityLoading && <ActivitySkeleton count={3} />}
       {!activityLoading && activity.length === 0 ? (

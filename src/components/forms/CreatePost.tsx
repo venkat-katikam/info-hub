@@ -22,10 +22,12 @@ import { useEffect, useState } from "react";
 import { useUserContext } from "@/context/UserContext";
 import { fetchUser } from "@/helpers/fetchUser";
 import { CreatePostSkeleton } from "../shared/Skeletons";
+import { LoadingDots } from "../shared/LoadingDots";
 
 function CreatePost() {
   const { userData, setUserData } = useUserContext();
   const [userLoading, setUserLoading] = useState(false);
+  const [createPostLoading, setCreatePostLoading] = useState(false);
 
   const router = useRouter();
   const pathname = usePathname();
@@ -45,6 +47,7 @@ function CreatePost() {
 
   const onSubmit = async (values: z.infer<typeof PostValidationSchema>) => {
     try {
+      setCreatePostLoading(true);
       const response = await fetch("api/post", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -59,14 +62,17 @@ function CreatePost() {
         router.push("/home?postCreated=true");
       } else {
         const responseData = await response.json();
+        setCreatePostLoading(false);
       }
     } catch (error: any) {
       console.log("Error during uploading post", error);
+      setCreatePostLoading(false);
     }
   };
 
   return (
     <>
+      {createPostLoading && <LoadingDots />}
       {userLoading ? (
         <CreatePostSkeleton />
       ) : (

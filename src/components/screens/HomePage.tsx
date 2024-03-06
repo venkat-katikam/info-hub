@@ -8,7 +8,7 @@ import PostCard from "../cards/PostCard";
 import { fetchPosts } from "@/helpers/fetchPosts";
 import { useSearchParams } from "next/navigation";
 import { PostSkeleton } from "@/components/shared/Skeletons";
-import { ProgressBar } from "../shared/Progressbar";
+import { LoadingDots } from "../shared/LoadingDots";
 
 interface Post {
   _id: string;
@@ -55,7 +55,7 @@ const HomePage = () => {
   return (
     <>
       <section className="mt-9 flex flex-col gap-10">
-        {userLoading && <ProgressBar />}
+        {userLoading && <LoadingDots />}
         {postLoading && <PostSkeleton count={4} />}
         {!postLoading && postsData.length === 0 ? (
           <p className="no-result">No posts yet</p>

@@ -102,6 +102,7 @@ const PostsTab = ({ currentUserId, accountId, accountType }: Props) => {
             comments={post.children}
           />
         ))}
+      {userPosts.length === 0 && <p className="no-result">No posts yet</p>}
     </section>
   );
 };

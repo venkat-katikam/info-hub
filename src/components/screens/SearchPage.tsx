@@ -7,7 +7,7 @@ import UserCard from "../cards/UserCard";
 import Image from "next/image";
 import { Input } from "../ui/input";
 import { SearchUserSkeleton } from "../shared/Skeletons";
-import { ProgressBar } from "../shared/Progressbar";
+import { LoadingDots } from "../shared/LoadingDots";
 
 interface User {
   _id: string;
@@ -63,7 +63,7 @@ const SearchPage = () => {
   return (
     <section>
       <h1>Search page</h1>
-      {userLoading && <ProgressBar />}
+      {userLoading && <LoadingDots />}
       <div className="searchbar">
         <Image
           src="/assets/search-gray.svg"

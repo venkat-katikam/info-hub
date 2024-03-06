@@ -24,7 +24,7 @@ export function SearchUserSkeleton({ count = 1 }) {
     <>
       {arr.map((elem, index) => (
         <div
-          className="flex space-x-3 max-xs:rounded-xl max-xs:bg-dark-3 max-xs:p-4 max-xs:flex-col max-xs:items-center"
+          className="flex space-x-3 max-xs:rounded-xl max-xs:p-4 max-xs:flex-col max-xs:items-center"
           key={index}
         >
           <Skeleton className="h-12 w-12 rounded-full max-xs:hidden bg-dark-2" />

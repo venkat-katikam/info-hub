@@ -7,7 +7,7 @@ import PostCard from "../cards/PostCard";
 import { redirect } from "next/navigation";
 import Comment from "../forms/Comment";
 import { PostSkeleton, SearchUserSkeleton } from "../shared/Skeletons";
-import { ProgressBar } from "../shared/Progressbar";
+import { LoadingDots } from "../shared/LoadingDots";
 
 interface Post {
   _id: string;
@@ -89,7 +89,7 @@ const PostPage = ({ id }: { id: string }) => {
 
   return (
     <>
-      {userLoading && <ProgressBar />}
+      {userLoading && <LoadingDots />}
       {Object.keys(post).length !== 0 && (
         <section className="relative">
           <div>
@@ -119,7 +119,10 @@ const PostPage = ({ id }: { id: string }) => {
           </div>
           <div className="text-base-semibold text-light-2 mt-5">Comments</div>
           <div className="mt-10">
-            {post.children.length === 0 && <PostSkeleton count={2} />}
+            {postLoading && <PostSkeleton count={2} />}
+            {post.children.length === 0 && (
+              <p className="no-result">No comments yet</p>
+            )}
             {post.children.map((childItem: any) => (
               <PostCard
                 key={childItem._id}

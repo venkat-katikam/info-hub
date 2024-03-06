@@ -9,7 +9,7 @@ import { profileTabs } from "@/constants";
 import Image from "next/image";
 import PostsTab from "../shared/PostsTab";
 import { ProfileSkeleton } from "../shared/Skeletons";
-import { ProgressBar } from "../shared/Progressbar";
+import { LoadingDots } from "../shared/LoadingDots";
 
 interface User {
   _id: string;
@@ -78,7 +78,7 @@ const ProfilePage = ({ userId }: { userId: string }) => {
     <section>
       {userLoading && (
         <div className="mb-5">
-          <ProgressBar />
+          <LoadingDots />
         </div>
       )}
       {accountUserLoading ? (

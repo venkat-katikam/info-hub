@@ -22,6 +22,7 @@ import { useEffect, useState } from "react";
 import { useUserContext } from "@/context/UserContext";
 import { fetchUser } from "@/helpers/fetchUser";
 import Image from "next/image";
+import { LoadingDots } from "../shared/LoadingDots";
 
 interface Props {
   postId: string;
@@ -40,6 +41,7 @@ const Comment = ({
 }: Props) => {
   const router = useRouter();
   const pathname = usePathname();
+  const [loading, setLoading] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(CommentValidationSchema),
@@ -50,6 +52,7 @@ const Comment = ({
 
   const onSubmit = async (values: z.infer<typeof CommentValidationSchema>) => {
     try {
+      setLoading(true);
       const response = await fetch("/api/comment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -63,16 +66,20 @@ const Comment = ({
         const responseData = await response.json();
         setCommentAdded(commentAdded + 1);
         router.push(`/post/${postId}`);
+        setLoading(false);
       } else {
         const responseData = await response.json();
+        setLoading(false);
       }
       form.reset();
     } catch (error: any) {
       console.log("Error during commenting on a post", error);
+      setLoading(false);
     }
   };
   return (
     <>
+      {loading && <LoadingDots />}
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="comment-form">
           <FormField
