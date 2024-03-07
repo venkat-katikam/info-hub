@@ -10,6 +10,7 @@ import Image from "next/image";
 import PostsTab from "../shared/PostsTab";
 import { ProfileSkeleton } from "../shared/Skeletons";
 import { LoadingDots } from "../shared/LoadingDots";
+import { useRouter } from "next/navigation";
 
 interface User {
   _id: string;
@@ -22,6 +23,7 @@ interface User {
 }
 
 const ProfilePage = ({ userId }: { userId: string }) => {
+  const router = useRouter();
   const { userData, setUserData } = useUserContext();
   const [accountUser, setAccountUser] = useState<User>({
     _id: "",
@@ -35,10 +37,15 @@ const ProfilePage = ({ userId }: { userId: string }) => {
 
   const [accountUserLoading, setAccountUserLoading] = useState(false);
   const [userLoading, setUserLoading] = useState(false);
+  const [redirectToError, setRedirectToError] = useState(false);
+
+  if (redirectToError) {
+    router.push("/error");
+  }
 
   useEffect(() => {
     if (!userData._id) {
-      fetchUser(setUserData, setUserLoading);
+      fetchUser(setUserData, setUserLoading, setRedirectToError);
     }
   }, []);
 
@@ -64,7 +71,8 @@ const ProfilePage = ({ userId }: { userId: string }) => {
       });
       return responseData?.data;
     } catch (error: any) {
-      return { errorMessage: "Some error in fetching a user", error };
+      console.log("Error during fetching user", error);
+      router.push("/error");
     } finally {
       setAccountUserLoading(false);
     }

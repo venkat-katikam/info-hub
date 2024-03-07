@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import PostCard from "../cards/PostCard";
 import { PostSkeleton } from "./Skeletons";
+import { useRouter } from "next/navigation";
 interface Props {
   currentUserId: string;
   accountId: string;
@@ -34,6 +35,7 @@ interface Post {
 }
 
 const PostsTab = ({ currentUserId, accountId, accountType }: Props) => {
+  const router = useRouter();
   const [userPosts, setUserPosts] = useState<Array<Post>>([]);
   const [userPostsData, setUserPostsData] = useState({
     name: "",
@@ -61,7 +63,8 @@ const PostsTab = ({ currentUserId, accountId, accountType }: Props) => {
       });
       setUserPosts([...responseData?.data?.posts]);
     } catch (error: any) {
-      return { errorMessage: "Some error in fetching a user", error };
+      console.log("Error during fetching user post", error);
+      router.push("/error");
     } finally {
       setPostLoading(false);
     }

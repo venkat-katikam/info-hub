@@ -34,5 +34,6 @@ export const config = {
     "/chats",
     "/profile/:id*",
     "/post/:id*",
+    "/error",
   ],
 };

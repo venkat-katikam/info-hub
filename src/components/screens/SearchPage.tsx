@@ -8,6 +8,7 @@ import Image from "next/image";
 import { Input } from "../ui/input";
 import { SearchUserSkeleton } from "../shared/Skeletons";
 import { LoadingDots } from "../shared/LoadingDots";
+import { useRouter } from "next/navigation";
 
 interface User {
   _id: string;
@@ -20,15 +21,21 @@ interface User {
 }
 
 const SearchPage = () => {
+  const router = useRouter();
   const { userData, setUserData } = useUserContext();
   const [users, setUsers] = useState<Array<User>>([]);
   const [search, setSearch] = useState("");
   const [userLoading, setUserLoading] = useState(false);
   const [allUserLoading, setAllUserLoading] = useState(false);
+  const [redirectToError, setRedirectToError] = useState(false);
+
+  if (redirectToError) {
+    router.push("/error");
+  }
 
   useEffect(() => {
     if (!userData._id) {
-      fetchUser(setUserData, setUserLoading);
+      fetchUser(setUserData, setUserLoading, setRedirectToError);
     }
   }, []);
 
@@ -51,7 +58,8 @@ const SearchPage = () => {
       const responseData = await response.json();
       setUsers([...responseData.data.users]);
     } catch (error: any) {
-      return { errorMessage: "Some error in fetching a user", error };
+      console.log("Error during fetching users", error);
+      router.push("/error");
     } finally {
       setAllUserLoading(false);
     }

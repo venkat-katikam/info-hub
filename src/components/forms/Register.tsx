@@ -24,6 +24,8 @@ import { LoadingDots } from "../shared/LoadingDots";
 const RegisterPage = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [errorFound, setErrorFound] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const form = useForm({
     resolver: zodResolver(RegisterValidationSchema),
@@ -35,6 +37,8 @@ const RegisterPage = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof RegisterValidationSchema>) => {
+    setErrorFound(false);
+    setErrorMessage("");
     try {
       setLoading(true);
       const response = await fetch("api/register", {
@@ -53,10 +57,14 @@ const RegisterPage = () => {
         router.push("/login");
       } else {
         const responseData = await response.json();
+        setErrorFound(true);
+        setErrorMessage(responseData?.errorMessage);
         setLoading(false);
       }
     } catch (error: any) {
       console.log("Error during registration", error);
+      setErrorFound(true);
+      setErrorMessage(error.message);
       setLoading(false);
     }
   };
@@ -127,6 +135,10 @@ const RegisterPage = () => {
               </FormItem>
             )}
           />
+
+          {errorFound && (
+            <p className="text-red-600 text-base-semibold">{errorMessage}</p>
+          )}
 
           <Button type="submit">Sign up</Button>
           <p className="text-light-2">

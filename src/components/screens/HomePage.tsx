@@ -6,7 +6,7 @@ import { usePostContext } from "@/context/PostContext";
 import { fetchUser } from "@/helpers/fetchUser";
 import PostCard from "../cards/PostCard";
 import { fetchPosts } from "@/helpers/fetchPosts";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { PostSkeleton } from "@/components/shared/Skeletons";
 import { LoadingDots } from "../shared/LoadingDots";
 
@@ -32,23 +32,29 @@ interface Post {
 }
 
 const HomePage = () => {
+  const router = useRouter();
   const { userData, setUserData } = useUserContext();
   const { postsData, setPostsData } = usePostContext();
   const [postLoading, setPostLoading] = useState(false);
   const [userLoading, setUserLoading] = useState(false);
+  const [redirectToError, setRedirectToError] = useState(false);
+
+  if (redirectToError) {
+    router.push("/error");
+  }
 
   const searchParams = useSearchParams();
   const postCreated = searchParams.get("postCreated");
 
   useEffect(() => {
     if (!userData._id) {
-      fetchUser(setUserData, setUserLoading);
+      fetchUser(setUserData, setUserLoading, setRedirectToError);
     }
   }, []);
 
   useEffect(() => {
     if (postsData.length === 0 || postCreated === "true") {
-      fetchPosts(setPostsData, setPostLoading);
+      fetchPosts(setPostsData, setPostLoading, setRedirectToError);
     }
   }, []);
 

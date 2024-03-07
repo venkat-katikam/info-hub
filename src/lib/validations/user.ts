@@ -17,7 +17,13 @@ export const UserValidationSchema = z.object({
       message: "Bio must be at least 3 characters.",
     })
     .max(1000),
-  profile_photo: z.string().url().nonempty(),
+  profile_photo: z
+    .string()
+    .min(3, {
+      message: "Please uplaod a valid photo.",
+    })
+    .url()
+    .nonempty(),
 });
 
 export const LoginValidationSchema = z.object({

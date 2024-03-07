@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
   } catch (error: any) {
     return NextResponse.json(
       {
-        errorMessage: `An error occured while registering user ${error.message}`,
+        errorMessage: `Something went wrong, Please try after some time`,
       },
       { status: 500 }
     );

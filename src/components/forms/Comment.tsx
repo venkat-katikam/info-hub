@@ -74,6 +74,7 @@ const Comment = ({
       form.reset();
     } catch (error: any) {
       console.log("Error during commenting on a post", error);
+      router.push("/error");
       setLoading(false);
     }
   };

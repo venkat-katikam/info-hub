@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) {
       return NextResponse.json(
-        { errorMessage: "Invalid password" },
+        { errorMessage: "Please provide correct password" },
         { status: 400 }
       );
     }
@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
     return response;
   } catch (error: any) {
     return NextResponse.json(
-      { errorMessage: `An error occured while user login ${error.message}` },
+      { errorMessage: `Something went wrong, Please try after some time` },
       { status: 500 }
     );
   }

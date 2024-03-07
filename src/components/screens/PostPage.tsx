@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useUserContext } from "@/context/UserContext";
 import { fetchUser } from "@/helpers/fetchUser";
 import PostCard from "../cards/PostCard";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import Comment from "../forms/Comment";
 import { PostSkeleton, SearchUserSkeleton } from "../shared/Skeletons";
 import { LoadingDots } from "../shared/LoadingDots";
@@ -35,6 +35,7 @@ interface Post {
 }
 
 const PostPage = ({ id }: { id: string }) => {
+  const router = useRouter();
   const { userData, setUserData } = useUserContext();
   const [commentAdded, setCommentAdded] = useState(0);
   const [post, setPost] = useState<Post>({
@@ -56,6 +57,11 @@ const PostPage = ({ id }: { id: string }) => {
 
   const [postLoading, setPostLoading] = useState(false);
   const [userLoading, setUserLoading] = useState(false);
+  const [redirectToError, setRedirectToError] = useState(false);
+
+  if (redirectToError) {
+    router.push("/error");
+  }
 
   const fetchPostById = async () => {
     try {
@@ -71,7 +77,8 @@ const PostPage = ({ id }: { id: string }) => {
 
       setPost(responseData.post);
     } catch (error) {
-      return { errorMessage: "Some error in fetching a post", error };
+      console.log("Error during fetching post", error);
+      router.push("/error");
     } finally {
       setPostLoading(false);
     }
@@ -79,7 +86,7 @@ const PostPage = ({ id }: { id: string }) => {
 
   useEffect(() => {
     if (!userData._id) {
-      fetchUser(setUserData, setUserLoading);
+      fetchUser(setUserData, setUserLoading, setRedirectToError);
     }
   }, []);
 

@@ -1,4 +1,8 @@
-export const fetchUser = async (setUserData: any, setUserLoading: any) => {
+export const fetchUser = async (
+  setUserData: any,
+  setUserLoading: any,
+  setRedirectToError: any
+) => {
   try {
     setUserLoading(true);
     const response = await fetch(`/api/user`, {
@@ -21,7 +25,8 @@ export const fetchUser = async (setUserData: any, setUserLoading: any) => {
     });
     return responseData?.data;
   } catch (error: any) {
-    return { errorMessage: "Some error in fetching a user", error };
+    setRedirectToError(true);
+    console.log("Some error in fetching a user", error);
   } finally {
     setUserLoading(false);
   }

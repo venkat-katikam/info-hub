@@ -25,6 +25,8 @@ import { LoadingDots } from "../shared/LoadingDots";
 const LoginPage = () => {
   const { userData, setUserData } = useUserContext();
   const [loading, setLoading] = useState(false);
+  const [errorFound, setErrorFound] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const router = useRouter();
 
@@ -37,6 +39,8 @@ const LoginPage = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof LoginValidationSchema>) => {
+    setErrorFound(false);
+    setErrorMessage("");
     try {
       setLoading(true);
       const response = await fetch("api/login", {
@@ -66,10 +70,15 @@ const LoginPage = () => {
         }
       } else {
         console.log("User login failed");
+        const responseData = await response.json();
+        setErrorFound(true);
+        setErrorMessage(responseData?.errorMessage);
         setLoading(false);
       }
     } catch (error: any) {
       console.log("Error during login", error.message);
+      setErrorFound(true);
+      setErrorMessage(error.message);
       setLoading(false);
     }
   };
@@ -121,6 +130,10 @@ const LoginPage = () => {
               </FormItem>
             )}
           />
+
+          {errorFound && (
+            <p className="text-red-600 text-base-semibold">{errorMessage}</p>
+          )}
 
           <Button type="submit">Login</Button>
           <p className="text-light-2">

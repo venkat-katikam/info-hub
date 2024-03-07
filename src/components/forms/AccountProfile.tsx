@@ -33,6 +33,9 @@ const AccountProfile = ({ btnTitle }: Props) => {
   const { userData, setUserData } = useUserContext();
   const [userLoading, setUserLoading] = useState(false);
   const [userUpdateLoading, setUserUpdateLoading] = useState(false);
+  const [errorFound, setErrorFound] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [redirectToError, setRedirectToError] = useState(false);
 
   const [files, setFiles] = useState<File[]>([]);
 
@@ -40,6 +43,10 @@ const AccountProfile = ({ btnTitle }: Props) => {
 
   const router = useRouter();
   const pathname = usePathname();
+
+  if (redirectToError) {
+    router.push("/error");
+  }
 
   const handleImage = (
     e: ChangeEvent<HTMLInputElement>,
@@ -66,7 +73,7 @@ const AccountProfile = ({ btnTitle }: Props) => {
 
   useEffect(() => {
     if (!userData._id) {
-      fetchUser(setUserData, setUserLoading);
+      fetchUser(setUserData, setUserLoading, setRedirectToError);
     }
   }, []);
 
@@ -87,6 +94,9 @@ const AccountProfile = ({ btnTitle }: Props) => {
   }, [userData]);
 
   const onSubmit = async (values: z.infer<typeof UserValidationSchema>) => {
+    setErrorFound(false);
+    setErrorMessage("");
+    setUserUpdateLoading(true);
     const blob = values.profile_photo;
 
     const hasImageChanged = isBase64Image(blob);
@@ -113,6 +123,9 @@ const AccountProfile = ({ btnTitle }: Props) => {
       });
 
       if (!response.ok) {
+        setErrorFound(true);
+        setErrorMessage("Failed to update user");
+        setUserUpdateLoading(false);
         throw new Error("Failed to update user");
       }
 
@@ -132,9 +145,10 @@ const AccountProfile = ({ btnTitle }: Props) => {
       } else {
         router.push("/home");
       }
-      setUserUpdateLoading(false);
-    } catch (error) {
-      console.log("Some error in updating user", error);
+    } catch (error: any) {
+      console.log("Some error in updating user", error.errorMessage);
+      setErrorFound(true);
+      setErrorMessage("Something went wrong in updating the user");
       setUserUpdateLoading(false);
     }
   };
@@ -152,37 +166,40 @@ const AccountProfile = ({ btnTitle }: Props) => {
             control={form.control}
             name="profile_photo"
             render={({ field }) => (
-              <FormItem className="flex items-center gap-4">
-                <FormLabel className="account-form_image-label">
-                  {field.value ? (
-                    <Image
-                      src={field.value}
-                      alt="profile photo"
-                      width={96}
-                      height={96}
-                      priority
-                      className="rounded-full object-contain"
+              <>
+                <FormItem className="flex items-center gap-4">
+                  <FormLabel className="account-form_image-label">
+                    {field.value ? (
+                      <Image
+                        src={field.value}
+                        alt="profile photo"
+                        width={96}
+                        height={96}
+                        priority
+                        className="rounded-full object-contain"
+                      />
+                    ) : (
+                      <Image
+                        src="/assets/profile.svg"
+                        alt="profile photo"
+                        width={24}
+                        height={24}
+                        className="object-contain"
+                      />
+                    )}
+                  </FormLabel>
+                  <FormControl className="flex-1 text-base-semibold text-gray-200">
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      placeholder="Upload your photo"
+                      className="account-form_image-input"
+                      onChange={(e) => handleImage(e, field.onChange)}
                     />
-                  ) : (
-                    <Image
-                      src="/assets/profile.svg"
-                      alt="profile photo"
-                      width={24}
-                      height={24}
-                      className="object-contain"
-                    />
-                  )}
-                </FormLabel>
-                <FormControl className="flex-1 text-base-semibold text-gray-200">
-                  <Input
-                    type="file"
-                    accept="image/*"
-                    placeholder="Upload your photo"
-                    className="account-form_image-input"
-                    onChange={(e) => handleImage(e, field.onChange)}
-                  />
-                </FormControl>
-              </FormItem>
+                  </FormControl>
+                </FormItem>
+                <FormMessage />
+              </>
             )}
           />
 
@@ -245,6 +262,9 @@ const AccountProfile = ({ btnTitle }: Props) => {
               </FormItem>
             )}
           />
+          {errorFound && (
+            <p className="text-red-600 text-base-semibold">{errorMessage}</p>
+          )}
           <Button type="submit">{btnTitle}</Button>
         </form>
       </Form>

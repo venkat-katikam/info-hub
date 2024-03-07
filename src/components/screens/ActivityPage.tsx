@@ -8,6 +8,7 @@ import Image from "next/image";
 import { formatDateString } from "@/lib/utils";
 import { ActivitySkeleton } from "../shared/Skeletons";
 import { LoadingDots } from "../shared/LoadingDots";
+import { useRouter } from "next/navigation";
 
 interface Author {
   _id: string;
@@ -24,14 +25,20 @@ interface Activity {
 }
 
 const ActivityPage = () => {
+  const router = useRouter();
   const { userData, setUserData } = useUserContext();
   const [activity, setActivity] = useState<Array<Activity>>([]);
   const [activityLoading, setActivityLoading] = useState(false);
   const [userLoading, setUserLoading] = useState(false);
+  const [redirectToError, setRedirectToError] = useState(false);
+
+  if (redirectToError) {
+    router.push("/error");
+  }
 
   useEffect(() => {
     if (!userData._id) {
-      fetchUser(setUserData, setUserLoading);
+      fetchUser(setUserData, setUserLoading, setRedirectToError);
     }
   }, []);
 
@@ -49,7 +56,8 @@ const ActivityPage = () => {
       const responseData = await response.json();
       setActivity([...responseData.data]);
     } catch (error: any) {
-      return { errorMessage: "Some error in fetching a user", error };
+      console.log("Error during loading activity", error);
+      router.push("/error");
     } finally {
       setActivityLoading(false);
     }

@@ -28,13 +28,18 @@ function CreatePost() {
   const { userData, setUserData } = useUserContext();
   const [userLoading, setUserLoading] = useState(false);
   const [createPostLoading, setCreatePostLoading] = useState(false);
+  const [redirectToError, setRedirectToError] = useState(false);
 
   const router = useRouter();
   const pathname = usePathname();
 
+  if (redirectToError) {
+    router.push("/error");
+  }
+
   useEffect(() => {
     if (!userData._id) {
-      fetchUser(setUserData, setUserLoading);
+      fetchUser(setUserData, setUserLoading, setRedirectToError);
     }
   }, []);
 
@@ -66,6 +71,7 @@ function CreatePost() {
       }
     } catch (error: any) {
       console.log("Error during uploading post", error);
+      router.push("/error");
       setCreatePostLoading(false);
     }
   };
