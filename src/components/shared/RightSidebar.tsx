@@ -6,6 +6,7 @@ function RightSidebar() {
       </div>
       <div className="flex flex-1 flex-col flex-start">
         <h3 className="text-heading4-medium text-light-1">Latest Chats</h3>
+        <p className="!text-base-regular text-light-3 mt-3">No chats yet</p>
       </div>
     </section>
   );
