@@ -43,3 +43,32 @@ export async function GET(
     return NextResponse.json({ errorMessage: error.message }, { status: 400 });
   }
 }
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const { id } = params;
+  const { author } = await request.json();
+  try {
+    const post = await Post.findById(id);
+
+    if (post) {
+      await post.deleteOne();
+      await User.findByIdAndUpdate(author, {
+        $pull: { posts: id },
+      });
+      return NextResponse.json(
+        { message: "Post deleted successfully", post },
+        { status: 200 }
+      );
+    } else {
+      return NextResponse.json(
+        { errorMessage: "Post not found" },
+        { status: 404 }
+      );
+    }
+  } catch (error: any) {
+    return NextResponse.json({ errorMessage: error.message }, { status: 400 });
+  }
+}

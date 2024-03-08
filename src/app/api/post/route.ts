@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
   try {
     const { text, author } = await req.json();
 
-    const createdPost = await await Post.create({
+    const createdPost = await Post.create({
       text,
       author,
     });

@@ -13,19 +13,21 @@ export async function GET(
 
   const { id } = params;
   try {
-    const posts = await User.findOne({ _id: id }).populate({
-      path: "posts",
-      model: Post,
-      populate: {
-        path: "children",
+    const posts = await User.findOne({ _id: id })
+      .populate({
+        path: "posts",
         model: Post,
         populate: {
-          path: "author",
-          model: User,
-          select: "name image id",
+          path: "children",
+          model: Post,
+          populate: {
+            path: "author",
+            model: User,
+            select: "name image id",
+          },
         },
-      },
-    });
+      })
+      .select("-password");
     return NextResponse.json(
       {
         message: "User Posts found",
