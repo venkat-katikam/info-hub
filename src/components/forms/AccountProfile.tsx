@@ -33,6 +33,7 @@ const AccountProfile = ({ btnTitle }: Props) => {
   const { userData, setUserData } = useUserContext();
   const [userLoading, setUserLoading] = useState(false);
   const [userUpdateLoading, setUserUpdateLoading] = useState(false);
+  const [changePassword, setChangePassword] = useState(false);
   const [errorFound, setErrorFound] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [redirectToError, setRedirectToError] = useState(false);
@@ -81,8 +82,9 @@ const AccountProfile = ({ btnTitle }: Props) => {
     resolver: zodResolver(UserValidationSchema),
     defaultValues: useMemo(() => {
       return {
-        profile_photo: userData?.image || "",
+        image: userData?.image || "",
         name: userData?.name || "",
+        password: "",
         email: userData?.email || "",
         bio: userData?.bio || "",
       };
@@ -97,14 +99,14 @@ const AccountProfile = ({ btnTitle }: Props) => {
     setErrorFound(false);
     setErrorMessage("");
     setUserUpdateLoading(true);
-    const blob = values.profile_photo;
+    const blob = values.image;
 
     const hasImageChanged = isBase64Image(blob);
     if (hasImageChanged) {
       const imgRes: any = await startUpload(files);
 
       if (imgRes && imgRes[0].fileUrl) {
-        values.profile_photo = imgRes[0].fileUrl;
+        values.image = imgRes[0].fileUrl;
       }
     }
 
@@ -118,7 +120,8 @@ const AccountProfile = ({ btnTitle }: Props) => {
           email: values.email,
           name: values.name,
           bio: values.bio,
-          image: values.profile_photo,
+          image: values.image,
+          password: changePassword ? values.password : undefined,
         }),
       });
 
@@ -140,8 +143,8 @@ const AccountProfile = ({ btnTitle }: Props) => {
         onboarded: responseData?.data?.onboarded,
         posts: responseData?.data?.posts,
       });
-      if (pathname === "/profile/edit") {
-        router.back();
+      if (pathname === "/update-profile") {
+        router.push(`/profile/${userData._id}`);
       } else {
         router.push("/home");
       }
@@ -164,7 +167,7 @@ const AccountProfile = ({ btnTitle }: Props) => {
         >
           <FormField
             control={form.control}
-            name="profile_photo"
+            name="image"
             render={({ field }) => (
               <>
                 <FormItem className="flex items-center gap-4">
@@ -242,6 +245,40 @@ const AccountProfile = ({ btnTitle }: Props) => {
               </FormItem>
             )}
           />
+          {pathname === "/update-profile" && (
+            <>
+              {changePassword && (
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col gap-3 w-full">
+                      <FormLabel className="text-base-semibold text-light-2">
+                        Password
+                      </FormLabel>
+                      <FormControl className="flex-1 text-base-semibold text-gray-200">
+                        <Input
+                          type="password"
+                          className="account-form_input no-focus"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+
+              <p
+                className="font-medium text-primary-500 dark:text-blue-500 underline cursor-pointer text-right text-small-regular"
+                onClick={() => setChangePassword(!changePassword)}
+              >
+                {!changePassword
+                  ? "Update Password Also"
+                  : "Dont Update Password"}
+              </p>
+            </>
+          )}
 
           <FormField
             control={form.control}

@@ -17,13 +17,24 @@ export const UserValidationSchema = z.object({
       message: "Bio must be at least 3 characters.",
     })
     .max(1000),
-  profile_photo: z
+  image: z
     .string()
     .min(3, {
       message: "Please uplaod a valid photo.",
     })
     .url()
     .nonempty(),
+  password: z
+    .union([
+      z.string().length(0, {
+        message: "Password must be at least 3 characters.",
+      }),
+      z.string().min(3, {
+        message: "Password must be at least 3 characters.",
+      }),
+    ])
+    .optional()
+    .transform((e) => (e === "" ? undefined : e)),
 });
 
 export const LoginValidationSchema = z.object({
