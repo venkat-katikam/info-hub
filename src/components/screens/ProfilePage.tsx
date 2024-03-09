@@ -47,9 +47,10 @@ const ProfilePage = ({ userId }: { userId: string }) => {
   }
 
   useEffect(() => {
-    if (!userData._id) {
-      fetchUser(setUserData, setUserLoading, setRedirectToError);
-    }
+    // commented to fetching user again after creating a post, to fetch latest latest posts array
+    // if (!userData._id) {
+    fetchUser(setUserData, setUserLoading, setRedirectToError);
+    // }
   }, []);
 
   const fetchUserById = async (userId: string) => {

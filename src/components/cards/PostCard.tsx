@@ -164,23 +164,34 @@ const PostCard = ({
                       className="cursor-pointer object-contain"
                     />
                   </Link>
-                  <Image
-                    src="/assets/repost.svg"
-                    alt="repost"
-                    width={24}
-                    height={24}
-                    className="cursor-pointer object-contain"
-                  />
-                  <Image
-                    src="/assets/share.svg"
-                    alt="share"
-                    width={24}
-                    height={24}
-                    className="cursor-pointer object-contain"
-                  />
+                  {!isComment && (
+                    <Image
+                      src="/assets/repost.svg"
+                      alt="repost"
+                      width={24}
+                      height={24}
+                      className="cursor-pointer object-contain"
+                    />
+                  )}
 
                   {accountId === currentUserId && (
-                    <DeleteDialogBox deletePostHandler={deletePostHandler} />
+                    <>
+                      {!isComment && (
+                        <Link
+                          href={`/update-post/${id}`}
+                          className="flex items-center"
+                        >
+                          <Image
+                            src="/assets/edit.svg"
+                            alt="edit"
+                            width={20}
+                            height={20}
+                            className="cursor-pointer object-contain "
+                          />
+                        </Link>
+                      )}
+                      <DeleteDialogBox deletePostHandler={deletePostHandler} />
+                    </>
                   )}
                 </div>
 

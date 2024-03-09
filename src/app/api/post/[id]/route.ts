@@ -44,6 +44,32 @@ export async function GET(
   }
 }
 
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const { id } = params;
+    const { text } = await request.json();
+
+    const post = await Post.findOneAndUpdate({ _id: id }, { text: text });
+
+    if (!post) {
+      throw new Error("Post not found");
+    }
+
+    return NextResponse.json(
+      {
+        message: "Post Updated",
+        post,
+      },
+      { status: 200 }
+    );
+  } catch (error: any) {
+    return NextResponse.json({ errorMessage: error.message }, { status: 500 });
+  }
+}
+
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }

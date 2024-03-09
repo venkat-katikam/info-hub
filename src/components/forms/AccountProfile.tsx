@@ -112,7 +112,7 @@ const AccountProfile = ({ btnTitle }: Props) => {
 
     try {
       setUserUpdateLoading(true);
-      const response = await fetch(`api/user`, {
+      const response = await fetch(`/api/user`, {
         method: "PUT",
         headers: { "Content-type": "application/json" },
         body: JSON.stringify({

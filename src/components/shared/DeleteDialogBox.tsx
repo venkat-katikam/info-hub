@@ -25,9 +25,9 @@ export function DeleteDialogBox({ deletePostHandler }: any) {
       </DialogTrigger>
       <DialogContent className="sm:max-w-md w-5/6">
         <DialogHeader>
-          <DialogTitle>Are you sure you want to delete the post?</DialogTitle>
+          <DialogTitle>Are you sure you want to delete?</DialogTitle>
           <DialogDescription>
-            Once the post is deleted, it cannot be retrieved back.
+            Once deleted cannot be retrieved back.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="sm:justify-between">
@@ -43,7 +43,7 @@ export function DeleteDialogBox({ deletePostHandler }: any) {
               className="bg-red-600 text-white m-3 hover:bg-red-600"
               onClick={deletePostHandler}
             >
-              Delete the post
+              Delete
             </Button>
           </DialogClose>
         </DialogFooter>
