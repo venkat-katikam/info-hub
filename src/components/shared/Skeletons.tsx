@@ -74,3 +74,21 @@ export function ProfileSkeleton() {
     </div>
   );
 }
+
+export function SuggestedUsersSkeleton({ count = 1 }) {
+  const arr: any[] = new Array(count).fill(0);
+  return (
+    <>
+      {arr.map((elem, index) => (
+        <div
+          className="flex space-x-3 max-xs:rounded-xl max-xs:p-4 max-xs:flex-col max-xs:items-center mb-3"
+          key={index}
+        >
+          <Skeleton className="h-8 w-10 rounded-full bg-[#3B3B3B]" />
+
+          <Skeleton className="h-8 w-full rounded-xl  bg-[#3B3B3B]" />
+        </div>
+      ))}
+    </>
+  );
+}

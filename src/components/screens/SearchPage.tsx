@@ -46,7 +46,7 @@ const SearchPage = () => {
       const response = await fetch(
         `/api/all-users?userId=&${
           userData._id
-        }&searchString=${""}&pageNumber=${1}&pageSize=${25}`,
+        }&searchString=${""}&pageNumber=${1}&pageSize=${100}`,
         {
           cache: "no-store",
         }
@@ -70,7 +70,6 @@ const SearchPage = () => {
 
   return (
     <section>
-      <h1>Search page</h1>
       {userLoading && <LoadingDots />}
       <div className="searchbar">
         <Image
