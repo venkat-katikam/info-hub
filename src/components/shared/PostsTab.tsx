@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import PostCard from "../cards/PostCard";
 import { PostSkeleton } from "./Skeletons";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 interface Props {
   currentUserId: string;
   accountId: string;
@@ -45,6 +45,9 @@ const PostsTab = ({ currentUserId, accountId, accountType }: Props) => {
   });
   const [postLoading, setPostLoading] = useState(false);
 
+  const searchParams = useSearchParams();
+  const postsDeleted = searchParams.get("postsDeleted");
+
   const fetchUserPosts = async (userId: string) => {
     try {
       setPostLoading(true);
@@ -75,7 +78,7 @@ const PostsTab = ({ currentUserId, accountId, accountType }: Props) => {
     if (accountId) {
       fetchUserPosts(accountId);
     }
-  }, [accountId]);
+  }, [accountId, postsDeleted]);
 
   return (
     <section className="mt-9 flex flex-col gap-10">

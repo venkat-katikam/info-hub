@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useUserContext } from "@/context/UserContext";
 import { fetchUser } from "@/helpers/fetchUser";
 import PostCard from "../cards/PostCard";
-import { redirect, useRouter } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import Comment from "../forms/Comment";
 import { PostSkeleton, SearchUserSkeleton } from "../shared/Skeletons";
 import { LoadingDots } from "../shared/LoadingDots";
@@ -61,6 +61,9 @@ const PostPage = ({ id }: { id: string }) => {
   const [userLoading, setUserLoading] = useState(false);
   const [redirectToError, setRedirectToError] = useState(false);
 
+  const searchParams = useSearchParams();
+  const postsDeleted = searchParams.get("postsDeleted");
+
   if (redirectToError) {
     router.push("/error");
   }
@@ -94,7 +97,7 @@ const PostPage = ({ id }: { id: string }) => {
 
   useEffect(() => {
     fetchPostById();
-  }, [commentAdded]);
+  }, [commentAdded, postsDeleted]);
 
   return (
     <>

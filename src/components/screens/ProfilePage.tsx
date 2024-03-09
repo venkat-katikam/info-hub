@@ -10,7 +10,7 @@ import Image from "next/image";
 import PostsTab from "../shared/PostsTab";
 import { ProfileSkeleton } from "../shared/Skeletons";
 import { LoadingDots } from "../shared/LoadingDots";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface User {
   _id: string;
@@ -38,6 +38,9 @@ const ProfilePage = ({ userId }: { userId: string }) => {
   const [accountUserLoading, setAccountUserLoading] = useState(false);
   const [userLoading, setUserLoading] = useState(false);
   const [redirectToError, setRedirectToError] = useState(false);
+
+  const searchParams = useSearchParams();
+  const postsDeleted = searchParams.get("postsDeleted");
 
   if (redirectToError) {
     router.push("/error");
@@ -81,7 +84,7 @@ const ProfilePage = ({ userId }: { userId: string }) => {
     if (userId) {
       fetchUserById(userId);
     }
-  }, [userId]);
+  }, [userId, postsDeleted]);
   return (
     <section>
       {userLoading && (

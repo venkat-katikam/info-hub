@@ -4,7 +4,7 @@ import { formatDateString } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { LoadingDots } from "../shared/LoadingDots";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { DeleteDialogBox } from "../shared/DeleteDialogBox";
 
 interface Props {
@@ -46,6 +46,8 @@ const PostCard = ({
   const [noOfLikes, setNoOfLikes] = useState(likes.length);
   const [deletePostLoading, setDeletePostLoading] = useState(false);
   const [redirectToError, setRedirectToError] = useState(false);
+  const searchParams = useSearchParams();
+  const postsDeleted = searchParams.get("postsDeleted");
 
   const deletePostHandler = async () => {
     try {
@@ -63,7 +65,11 @@ const PostCard = ({
       }
       const responseData = await response.json();
 
-      location.reload();
+      router.push(
+        `${pathname}?postsDeleted=${
+          postsDeleted ? Number(postsDeleted) + 1 : 1
+        }`
+      );
 
       console.log("responseData", responseData);
     } catch (error) {
