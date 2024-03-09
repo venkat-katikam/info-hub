@@ -19,6 +19,7 @@ interface Props {
     image: string;
   };
   createdAt: string;
+  likes: string[];
   comments: {
     author: {
       image: string;
@@ -37,10 +38,12 @@ const PostCard = ({
   createdAt,
   comments,
   isComment,
+  likes,
 }: Props) => {
   const router = useRouter();
   const pathname = usePathname();
-  const [like, setLike] = useState(false);
+  const [likeClicked, setLikeClicked] = useState(likes.includes(currentUserId));
+  const [noOfLikes, setNoOfLikes] = useState(likes.length);
   const [deletePostLoading, setDeletePostLoading] = useState(false);
   const [redirectToError, setRedirectToError] = useState(false);
 
@@ -68,6 +71,26 @@ const PostCard = ({
       console.log("Some error in deleting the post", error);
     } finally {
       setDeletePostLoading(false);
+    }
+  };
+
+  const addLikeHandler = async () => {
+    try {
+      const response = await fetch(`/api/likes/${id}`, {
+        method: "PUT",
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify({
+          userId: currentUserId,
+        }),
+      });
+
+      if (!response.ok) {
+        console.log("Some error in updating likes");
+      }
+
+      const responseData = await response.json();
+    } catch (error: any) {
+      console.log("Some error in updating likes", error.errorMessage);
     }
   };
 
@@ -110,7 +133,7 @@ const PostCard = ({
                 <div className="flex gap-3.5">
                   <Image
                     src={`${
-                      like
+                      likeClicked
                         ? "/assets/heart-filled.svg"
                         : "/assets/heart-gray.svg"
                     }`}
@@ -119,7 +142,11 @@ const PostCard = ({
                     height={24}
                     className="cursor-pointer object-contain"
                     onClick={() => {
-                      setLike(!like);
+                      setLikeClicked(!likeClicked);
+                      setNoOfLikes(
+                        !likeClicked ? noOfLikes + 1 : noOfLikes - 1
+                      );
+                      addLikeHandler();
                     }}
                   />
                   <Link href={`/post/${id}`}>
@@ -153,7 +180,7 @@ const PostCard = ({
 
                 <Link href={`/post/${id}`}>
                   <p className="text-subtle-medium text-gray-1">
-                    {comments.length} likes & {comments.length} replies
+                    {noOfLikes} likes & {comments.length} replies
                   </p>
                 </Link>
               </div>

@@ -20,6 +20,7 @@ interface Post {
     image: string;
   };
   createdAt: string;
+  likes: string[];
   comments: {
     author: {
       image: string;
@@ -103,6 +104,7 @@ const PostsTab = ({ currentUserId, accountId, accountType }: Props) => {
             }
             createdAt={post.createdAt}
             comments={post.children}
+            likes={post.likes}
           />
         ))}
       {userPosts.length === 0 && <p className="no-result">No posts yet</p>}

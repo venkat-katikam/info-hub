@@ -77,6 +77,7 @@ const HomePage = () => {
                 author={post.author}
                 createdAt={post.createdAt}
                 comments={post.children}
+                likes={post.likes}
               />
             ))}
           </>

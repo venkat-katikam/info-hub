@@ -20,6 +20,7 @@ interface Post {
     image: string;
   };
   createdAt: string;
+  likes: string[];
   comments: {
     author: {
       image: string;
@@ -50,6 +51,7 @@ const PostPage = ({ id }: { id: string }) => {
     },
     createdAt: "",
     comments: [],
+    likes: [],
     isComment: false,
     text: "",
     children: [],
@@ -112,6 +114,7 @@ const PostPage = ({ id }: { id: string }) => {
                 author={post.author}
                 createdAt={post.createdAt}
                 comments={post.children}
+                likes={post.likes}
               />
             )}
           </div>
@@ -141,6 +144,7 @@ const PostPage = ({ id }: { id: string }) => {
                 createdAt={childItem.createdAt}
                 comments={childItem.children}
                 accountId={childItem.author._id}
+                likes={childItem.likes}
                 isComment
               />
             ))}
