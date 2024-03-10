@@ -5,7 +5,7 @@ const Page = ({ params }: { params: { id: string } }) => {
 
   return (
     <>
-      <h1 className="head-text mb-5">Post Page</h1>
+      <h1 className="head-text mb-5">Post</h1>
       <PostPage id={params.id} />
     </>
   );

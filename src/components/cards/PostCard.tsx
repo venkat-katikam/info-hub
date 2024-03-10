@@ -70,8 +70,6 @@ const PostCard = ({
           postsDeleted ? Number(postsDeleted) + 1 : 1
         }`
       );
-
-      console.log("responseData", responseData);
     } catch (error) {
       setRedirectToError(true);
       console.log("Some error in deleting the post", error);

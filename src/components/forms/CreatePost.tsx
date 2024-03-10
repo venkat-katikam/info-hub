@@ -99,8 +99,6 @@ function CreatePost() {
     reset(postResponse);
   }, [postResponse]);
 
-  console.log("pathname", pathname);
-
   const onSubmit = async (values: z.infer<typeof PostValidationSchema>) => {
     try {
       setCreatePostLoading(true);

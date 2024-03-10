@@ -32,6 +32,7 @@ export async function GET(request: NextRequest) {
     const sortOptions = { createdAt: sortBy };
 
     const usersQuery = User.find(query)
+      .select("-password")
       .sort(sortOptions)
       .skip(skipAmount)
       .limit(pageSize);

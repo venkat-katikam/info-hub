@@ -5,7 +5,7 @@ export const fetchPosts = async (
 ) => {
   try {
     setPostLoading(true);
-    const response = await fetch(`/api/post?pageNumber=1&pageSize=20`, {
+    const response = await fetch(`/api/post?pageNumber=1&pageSize=200`, {
       cache: "no-store",
     });
 

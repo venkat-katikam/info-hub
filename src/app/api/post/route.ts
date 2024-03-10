@@ -44,6 +44,7 @@ export async function GET(req: NextRequest) {
       .populate({
         path: "author",
         model: User,
+        select: "-password",
       })
       .populate({
         path: "children", // Populate the children field

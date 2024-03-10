@@ -37,6 +37,7 @@ const AccountProfile = ({ btnTitle }: Props) => {
   const [errorFound, setErrorFound] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [redirectToError, setRedirectToError] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const [files, setFiles] = useState<File[]>([]);
 
@@ -258,11 +259,17 @@ const AccountProfile = ({ btnTitle }: Props) => {
                       </FormLabel>
                       <FormControl className="flex-1 text-base-semibold text-gray-200">
                         <Input
-                          type="password"
+                          type={showPassword ? "text" : "password"}
                           className="account-form_input no-focus"
                           {...field}
                         />
                       </FormControl>
+                      <p
+                        className="font-medium text-primary-500 dark:text-blue-500 underline cursor-pointer text-right text-small-regular"
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? "Hide password" : "Show password"}
+                      </p>
                       <FormMessage />
                     </FormItem>
                   )}

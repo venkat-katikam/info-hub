@@ -6,7 +6,17 @@ import { fetchUser } from "@/helpers/fetchUser";
 import { LoadingDots } from "../shared/LoadingDots";
 import { useRouter } from "next/navigation";
 
-export function ErrorPage() {
+interface User {
+  _id: string;
+  name: string;
+  email: string;
+  bio: string;
+  image: string;
+  onboarded: boolean;
+  posts: string[];
+}
+
+const ChatPage = () => {
   const router = useRouter();
   const { userData, setUserData } = useUserContext();
   const [userLoading, setUserLoading] = useState(false);
@@ -23,13 +33,11 @@ export function ErrorPage() {
   }, []);
 
   return (
-    <div className="fixed top-0 left-0 bg-dark-1 bg-opacity-90 z-10 h-full w-full flex items-center justify-center">
+    <section>
       {userLoading && <LoadingDots />}
-      <div className="flex flex-col space-x-2 justify-center items-center">
-        <div className="text-white text-heading1-bold">Oops! &#x1F613;</div>
-        <div className="text-white">Something went wrong</div>
-        <div className="text-white">Please try refreshing the page</div>
-      </div>
-    </div>
+      <p className="!text-base-regular text-light-3">No chats yet</p>
+    </section>
   );
-}
+};
+
+export default ChatPage;
