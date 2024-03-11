@@ -19,7 +19,7 @@ interface Props {
     image: string;
   };
   createdAt: string;
-  likes: string[];
+  likes: { userId: string; createdAt: string; _id: string }[];
   comments: {
     author: {
       image: string;
@@ -42,7 +42,8 @@ const PostCard = ({
 }: Props) => {
   const router = useRouter();
   const pathname = usePathname();
-  const [likeClicked, setLikeClicked] = useState(likes.includes(currentUserId));
+  const isUserLiked = likes.some((like) => like.userId === currentUserId);
+  const [likeClicked, setLikeClicked] = useState(isUserLiked);
   const [noOfLikes, setNoOfLikes] = useState(likes.length);
   const [deletePostLoading, setDeletePostLoading] = useState(false);
   const [redirectToError, setRedirectToError] = useState(false);

@@ -20,7 +20,7 @@ interface Post {
     image: string;
   };
   createdAt: string;
-  likes: string[];
+  likes: { userId: string; createdAt: string; _id: string }[];
   comments: {
     author: {
       image: string;

@@ -1,5 +1,15 @@
 import mongoose, { Schema } from "mongoose";
 
+interface Likes {
+  userId: string;
+  createdAt: Date;
+}
+
+const likesSchema = new Schema<Likes>({
+  userId: { type: String },
+  createdAt: { type: Date, default: Date.now },
+});
+
 const postSchema = new Schema(
   {
     text: {
@@ -18,11 +28,7 @@ const postSchema = new Schema(
     parentId: {
       type: String,
     },
-    likes: [
-      {
-        type: String,
-      },
-    ],
+    likes: [likesSchema],
     children: [
       {
         type: mongoose.Schema.Types.ObjectId,

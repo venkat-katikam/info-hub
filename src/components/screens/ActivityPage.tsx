@@ -22,6 +22,7 @@ interface Activity {
   parentId: string;
   text: string;
   createdAt: string;
+  isLike?: boolean;
 }
 
 const ActivityPage = () => {
@@ -77,26 +78,39 @@ const ActivityPage = () => {
         <p className="!text-base-regular text-light-3 ">No activity yet</p>
       ) : (
         <>
-          {activity.map((activity) => (
-            <Link key={activity._id} href={`/post/${activity.parentId}`}>
-              <article className="activity-card">
-                <div className="relative h-11 w-11">
-                  <Image
-                    src={activity.author.image}
-                    alt="Profile picture"
-                    fill
-                    className="rounded-full object-cover"
-                  />
-                </div>
-                <p className="!text-small-regular text-light-1 ml-5">
-                  <span className="mr-1 text-primary-500">
-                    {activity.author.name}
-                  </span>{" "}
-                  replied to your post at {formatDateString(activity.createdAt)}
-                </p>
-              </article>
-            </Link>
-          ))}
+          {!activityLoading && activity.length > 0 && (
+            <p className="!text-base-regular text-light-3 mb-5">
+              Click on the notification to view the post
+            </p>
+          )}
+          {activity
+            .sort((a, b) => {
+              const dateA = new Date(a.createdAt);
+              const dateB = new Date(b.createdAt);
+
+              return dateB.getTime() - dateA.getTime();
+            })
+            .map((activity) => (
+              <Link key={activity._id} href={`/post/${activity.parentId}`}>
+                <article className="activity-card">
+                  <div className="relative h-11 w-11">
+                    <Image
+                      src={activity.author.image}
+                      alt="Profile picture"
+                      fill
+                      className="rounded-full object-cover"
+                    />
+                  </div>
+                  <p className="!text-small-regular text-light-1 ml-5">
+                    <span className="mr-1 text-primary-500">
+                      {activity.author.name}
+                    </span>{" "}
+                    {activity.isLike ? "liked" : "commented on"} your post at{" "}
+                    {formatDateString(activity.createdAt)}
+                  </p>
+                </article>
+              </Link>
+            ))}
         </>
       )}
     </section>

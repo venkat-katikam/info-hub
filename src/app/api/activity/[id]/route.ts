@@ -14,10 +14,43 @@ export async function GET(
     // find all posts created by user
     const userPosts = await Post.find({ author: id });
 
+    const userPostsWithLikes = userPosts.filter(
+      (post) => post.likes.length > 0
+    );
+
     // collect all the child posts ids (replies) from 'children' field
     const childPostIds = userPosts.reduce((acc, userPost) => {
       return acc.concat(userPost.children);
     }, []);
+
+    let allLikesActivity = await Promise.all(
+      userPostsWithLikes.map(async (post) => {
+        const parentId = post._id;
+
+        const eachPostLikesActivity = await Promise.all(
+          post.likes.map(async (like: any) => {
+            if (id !== like.userId) {
+              const author = await User.findById(like.userId).select(
+                "name image _id"
+              );
+
+              return {
+                author,
+                parentId,
+                createdAt: like.createdAt,
+                isLike: true,
+              };
+            } else {
+              // Return an empty array if the condition is not met
+              return [];
+            }
+          })
+        );
+        return eachPostLikesActivity;
+      })
+    );
+
+    const flattenedLikesActivity = allLikesActivity.flat(Infinity);
 
     const replies = await Post.find({
       _id: { $in: childPostIds },
@@ -30,8 +63,8 @@ export async function GET(
 
     return NextResponse.json(
       {
-        message: "Replies found",
-        data: replies,
+        message: "Replies and Likes found",
+        data: [...replies, ...flattenedLikesActivity],
       },
       { status: 200 }
     );

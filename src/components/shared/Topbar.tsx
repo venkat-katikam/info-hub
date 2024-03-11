@@ -29,10 +29,18 @@ function Topbar() {
   }
 
   const logoutHandler = async () => {
-    const response = await fetch("/api/logout");
-    const responseData = await response.json();
-    setUserData({});
-    router.push("/login");
+    try {
+      setLogoutLoading(true);
+      const response = await fetch("/api/logout");
+      const responseData = await response.json();
+      setUserData({});
+      router.push("/login");
+    } catch (error: any) {
+      console.log("Somthing went wrong, Unable to logout", error.message);
+      setRedirectToError(true);
+    } finally {
+      setLogoutLoading(false);
+    }
   };
   return (
     <>

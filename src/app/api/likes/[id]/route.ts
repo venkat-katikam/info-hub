@@ -16,13 +16,21 @@ export async function PUT(
       throw new Error("Post not found");
     }
 
+    const checkIfLiked = (likes: any) => {
+      return likes.some((obj: any) => obj.userId === userId);
+    };
+
     let newLikes;
-    const addLike = originalPost.likes.includes(userId) ? false : true;
+    const addLike = checkIfLiked(originalPost.likes) ? false : true;
+
+    const newLike = { userId, createdAt: new Date() };
 
     if (addLike) {
-      newLikes = [...originalPost.likes, userId];
+      newLikes = [...originalPost.likes, newLike];
     } else {
-      newLikes = originalPost.likes.filter((elem: any) => elem !== userId);
+      newLikes = originalPost.likes.filter(
+        (elem: any) => elem.userId !== userId
+      );
     }
 
     const post = await Post.findOneAndUpdate({ _id: id }, { likes: newLikes });
