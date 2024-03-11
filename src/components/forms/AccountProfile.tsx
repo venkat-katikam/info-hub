@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import Image from "next/image";
+import { default as ImageNext } from "next/image";
 import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import { useUploadThing } from "@/lib/uploadthing";
 import { isBase64Image } from "@/lib/utils";
@@ -50,6 +50,16 @@ const AccountProfile = ({ btnTitle }: Props) => {
     router.push("/error");
   }
 
+  async function imageUrlToFile(
+    imageUrl: string,
+    fileName: string
+  ): Promise<File> {
+    const response = await fetch(imageUrl);
+    const blob = await response.blob();
+
+    return new File([blob], fileName, { type: blob.type });
+  }
+
   const handleImage = (
     e: ChangeEvent<HTMLInputElement>,
     fieldChange: (value: string) => void
@@ -60,13 +70,52 @@ const AccountProfile = ({ btnTitle }: Props) => {
 
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
-      setFiles(Array.from(e.target.files));
 
       if (!file.type.includes("image")) return;
 
-      fileReader.onload = async (event) => {
-        const imageDataUrl = event.target?.result?.toString() || "";
-        fieldChange(imageDataUrl);
+      fileReader.onload = function (event) {
+        const img = new Image();
+        img.src = event.target?.result?.toString() || "";
+
+        // compressing images to 2mb and making it square ie same height and width
+
+        img.onload = async function () {
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d")!;
+
+          // Calculate the new dimensions to make it square
+          const squareSize = Math.min(img.width, img.height);
+          canvas.width = squareSize;
+          canvas.height = squareSize;
+
+          // Draw the image on the canvas with the new dimensions
+          ctx.drawImage(
+            img,
+            (img.width - squareSize) / 2,
+            (img.height - squareSize) / 2,
+            squareSize,
+            squareSize,
+            0,
+            0,
+            squareSize,
+            squareSize
+          );
+
+          // Convert the canvas content to a base64-encoded JPEG image with a quality of 0.9
+          const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.9);
+          fieldChange(compressedDataUrl);
+
+          // Convert the compressedDataUrl to a File
+          const compressedImageFile = await imageUrlToFile(
+            compressedDataUrl,
+            "compressed-image.jpg"
+          );
+
+          // Create a FileList with a single file
+          const compressedImageFiles: File[] = [compressedImageFile];
+
+          setFiles(compressedImageFiles);
+        };
       };
 
       fileReader.readAsDataURL(file);
@@ -174,7 +223,7 @@ const AccountProfile = ({ btnTitle }: Props) => {
                 <FormItem className="flex items-center gap-4">
                   <FormLabel className="account-form_image-label">
                     {field.value ? (
-                      <Image
+                      <ImageNext
                         src={field.value}
                         alt="profile photo"
                         width={96}
@@ -183,7 +232,7 @@ const AccountProfile = ({ btnTitle }: Props) => {
                         className="rounded-full object-contain"
                       />
                     ) : (
-                      <Image
+                      <ImageNext
                         src="/assets/profile.svg"
                         alt="profile photo"
                         width={24}

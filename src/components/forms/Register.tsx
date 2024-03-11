@@ -150,7 +150,7 @@ const RegisterPage = () => {
           <Button type="submit">Register</Button>
           <p className="text-light-2">
             Already Registered?{" "}
-            <Link href="/login" className="underline">
+            <Link href="/login" className="underline text-primary-500">
               Login here
             </Link>
           </p>

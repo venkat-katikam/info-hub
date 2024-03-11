@@ -145,7 +145,7 @@ const LoginPage = () => {
           <Button type="submit">Login</Button>
           <p className="text-light-2">
             Are you a new user?{" "}
-            <Link href="/register" className="underline">
+            <Link href="/register" className="underline text-primary-500">
               Register here
             </Link>
           </p>

@@ -35,7 +35,10 @@ const ProfileHeader = ({
             <h2 className="text-left text-heading3-bold text-light-1">
               {name}
             </h2>
-            <p className="text-base-medium text-gray-1">@{email}</p>
+            <p className="text-base-medium text-gray-1">
+              <span className="text-base-medium text-primary-500">@</span>{" "}
+              {email}
+            </p>
           </div>
         </div>
       </div>
