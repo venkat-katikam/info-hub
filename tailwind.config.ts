@@ -16,6 +16,13 @@ module.exports = {
       },
     },
     fontSize: {
+      "main-title-cursive": [
+        "60px",
+        {
+          lineHeight: "140%",
+          fontWeight: "400",
+        },
+      ],
       "heading1-bold": [
         "36px",
         {

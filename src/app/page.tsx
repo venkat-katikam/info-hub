@@ -10,6 +10,11 @@ export default function Page() {
         </p>
       </div>
       <div className=" flex justify-center">
+        <span className="text-primary-500 custom-pacifico-font text-main-title-cursive">
+          InfoHub
+        </span>
+      </div>
+      <div className=" flex justify-center">
         <p className="text-base-semibold text-light-1 p-5 text-justify">
           Join InfoHub and discover a world where connections thrive.
           What&apos;s your next story?

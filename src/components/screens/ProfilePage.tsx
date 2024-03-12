@@ -38,6 +38,7 @@ const ProfilePage = ({ userId }: { userId: string }) => {
   const [accountUserLoading, setAccountUserLoading] = useState(false);
   const [userLoading, setUserLoading] = useState(false);
   const [redirectToError, setRedirectToError] = useState(false);
+  const [userPostsLength, setUserPostsLength] = useState(0);
 
   const searchParams = useSearchParams();
   const postsDeleted = searchParams.get("postsDeleted");
@@ -121,7 +122,7 @@ const ProfilePage = ({ userId }: { userId: string }) => {
 
                 {tab.label === "Posts" && (
                   <p className="ml-1 rounded-sm bg-light-4 px-2 py-1 !text-tiny-medium text-light-2">
-                    {accountUser?.posts?.length}
+                    {userPostsLength}
                   </p>
                 )}
               </TabsTrigger>
@@ -137,6 +138,7 @@ const ProfilePage = ({ userId }: { userId: string }) => {
                 currentUserId={userData._id}
                 accountId={accountUser._id}
                 accountType="User"
+                setUserPostsLength={setUserPostsLength}
               />
             </TabsContent>
           ))}

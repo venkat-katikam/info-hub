@@ -7,6 +7,7 @@ interface Props {
   currentUserId: string;
   accountId: string;
   accountType: string;
+  setUserPostsLength: any;
 }
 
 interface Post {
@@ -35,7 +36,12 @@ interface Post {
   }[];
 }
 
-const PostsTab = ({ currentUserId, accountId, accountType }: Props) => {
+const PostsTab = ({
+  currentUserId,
+  accountId,
+  accountType,
+  setUserPostsLength,
+}: Props) => {
   const router = useRouter();
   const [userPosts, setUserPosts] = useState<Array<Post>>([]);
   const [userPostsData, setUserPostsData] = useState({
@@ -66,6 +72,7 @@ const PostsTab = ({ currentUserId, accountId, accountType }: Props) => {
         _id: responseData?.data?._id,
       });
       setUserPosts([...responseData?.data?.posts]);
+      setUserPostsLength(responseData?.data?.posts.length);
     } catch (error: any) {
       console.log("Error during fetching user post", error);
       router.push("/error");

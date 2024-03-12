@@ -35,7 +35,10 @@ const ChatPage = () => {
   return (
     <section>
       {userLoading && <LoadingDots />}
-      <p className="!text-base-regular text-light-3">No chats yet</p>
+      <p className="!text-base-regular text-light-3">
+        Stay connected! Chats are in development and will be available to you
+        very soon.
+      </p>
     </section>
   );
 };

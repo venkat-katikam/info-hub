@@ -14,6 +14,14 @@ interface Props {
 
 const UserCard = ({ id, name, email, image, personType }: Props) => {
   const router = useRouter();
+
+  function maskEmail(email: string) {
+    const [prefix, domain] = email.split("@");
+    const maskedPrefix =
+      prefix.substring(0, 2) + "*".repeat(Math.max(0, prefix.length - 2));
+    return `${maskedPrefix}@${domain}`;
+  }
+
   return (
     <article className="user-card">
       <div className="user-card_avatar">
@@ -27,7 +35,10 @@ const UserCard = ({ id, name, email, image, personType }: Props) => {
         </Link>
         <div className="flex-1 text-ellipsis">
           <h4 className="text-base-semibold text-light-1">{name}</h4>
-          <p className="text-small-medium text-gray-1">@{email}</p>
+          <p className="text-small-medium text-gray-1">
+            <span className="text-small-medium text-primary-500">@</span>{" "}
+            {maskEmail(email)}
+          </p>
         </div>
       </div>
       <Button
