@@ -25,17 +25,17 @@ const ProfileHeader = ({
         <div className="flex items-center gap-3">
           <div className="relative h-20 w-20 object-cover">
             <Image
-              src={image}
+              src={image ? image : "/assets/default-profile.jpg"}
               alt="ProfileImage"
               fill
               className="rounded-full object-cover shadow-2xl"
             />
           </div>
-          <div className="flex-1">
-            <h2 className="text-left text-heading3-bold text-light-1">
+          <div className="flex-1 w-full whitespace-normal">
+            <h2 className="text-left text-heading3-bold text-light-1 break-all">
               {name}
             </h2>
-            <p className="text-base-medium text-gray-1">
+            <p className="text-base-medium text-gray-1 break-all">
               <span className="text-base-medium text-primary-500">@</span>{" "}
               {email}
             </p>

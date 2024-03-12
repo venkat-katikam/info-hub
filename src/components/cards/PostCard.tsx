@@ -129,7 +129,7 @@ const PostCard = ({
 
             <div>
               <Link href={`/profile/${author._id}`} className="w-fit">
-                <h4 className="cursor-pointer text-base-semibold text-light-1">
+                <h4 className="cursor-pointer text-base-semibold text-light-1 max-md:w-[160px] max-md:truncate">
                   {author.name}
                 </h4>
               </Link>
