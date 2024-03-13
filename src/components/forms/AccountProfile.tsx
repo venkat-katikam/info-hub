@@ -201,7 +201,9 @@ const AccountProfile = ({ btnTitle }: Props) => {
     } catch (error: any) {
       console.log("Some error in updating user", error.errorMessage);
       setErrorFound(true);
-      setErrorMessage("Something went wrong in updating the user");
+      setErrorMessage(
+        "Something went wrong in updating the user, please try uploading a photo of 3MB or below"
+      );
       setUserUpdateLoading(false);
     }
   };

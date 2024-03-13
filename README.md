@@ -1,6 +1,8 @@
+![Landing page Title](https://i.ibb.co/rZQTZxX/Info-Hub-landing-page-title.jpg)
+
 # InfoHub
 
-### A social media application where people can share there thoughts, opinions and lot more. Additionally people can like and comment on others posts. User can also chat with each other individually or in groups. Together, we create an ecosystem where ideas flourish and opinions find a welcoming audience.
+### A social media application where people can share their thoughts, opinions and lot more. Additionally people can like and comment on others posts. Users can also chat with each other individually or in groups. Together, we create an ecosystem where ideas flourish and opinions find a welcoming audience.
 
 ## Live Website
 
@@ -60,4 +62,10 @@ and many more, including code architecture and reusability
 
 ## 🖥️ Webapp Images
 
-![Landing page]()
+![Desktop Screens](https://i.postimg.cc/L8csPchr/Info-Hub-Desktop-screens-1-4.jpg)
+![Desktop Screens](https://i.postimg.cc/q72vx13g/Info-Hub-Desktop-screens-5-8.jpg)
+![Desktop Screens](https://i.postimg.cc/4NFyf7G4/Info-Hub-Desktop-screens-9-10.jpg)
+
+## 📱 Mobile Screen Images
+
+![Mobile Screens](https://i.postimg.cc/tTyCSF3k/Info-Hub-Mobile-screens.jpg)
