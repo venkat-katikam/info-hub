@@ -23,6 +23,7 @@ import { useUserContext } from "@/context/UserContext";
 import { fetchUser } from "@/helpers/fetchUser";
 import { CreatePostSkeleton } from "../shared/Skeletons";
 import { LoadingDots } from "../shared/LoadingDots";
+import { usePostContext } from "@/context/PostContext";
 
 interface PostText {
   post: string;
@@ -31,6 +32,7 @@ interface PostText {
 function CreatePost() {
   const { userData, setUserData } = useUserContext();
   const [userLoading, setUserLoading] = useState(false);
+  const { setPostsData } = usePostContext();
   const [fetchPostLoading, setFetchPostLoading] = useState(false);
   const [createPostLoading, setCreatePostLoading] = useState(false);
   const [redirectToError, setRedirectToError] = useState(false);
@@ -115,7 +117,8 @@ function CreatePost() {
 
         if (response.ok) {
           const responseData = await response.json();
-          router.push("/home?postCreated=true");
+          setPostsData([]);
+          router.push("/home");
         } else {
           const responseData = await response.json();
           router.push("/error");

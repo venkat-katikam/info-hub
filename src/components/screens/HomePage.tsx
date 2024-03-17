@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useInView } from "react-intersection-observer";
 import { useUserContext } from "@/context/UserContext";
 import { usePostContext } from "@/context/PostContext";
 import { fetchUser } from "@/helpers/fetchUser";
 import PostCard from "../cards/PostCard";
 import { fetchPosts } from "@/helpers/fetchPosts";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { PostSkeleton } from "@/components/shared/Skeletons";
 import { LoadingDots } from "../shared/LoadingDots";
 
@@ -37,14 +38,14 @@ const HomePage = () => {
   const { postsData, setPostsData } = usePostContext();
   const [postLoading, setPostLoading] = useState(false);
   const [userLoading, setUserLoading] = useState(false);
+  const [isFetchedAllPosts, setIsFetchedAllPosts] = useState(false);
   const [redirectToError, setRedirectToError] = useState(false);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [ref, inView] = useInView();
 
   if (redirectToError) {
     router.push("/error");
   }
-
-  const searchParams = useSearchParams();
-  const postCreated = searchParams.get("postCreated");
 
   useEffect(() => {
     if (!userData._id) {
@@ -53,10 +54,19 @@ const HomePage = () => {
   }, []);
 
   useEffect(() => {
-    if (postsData.length === 0 || postCreated === "true") {
-      fetchPosts(setPostsData, setPostLoading, setRedirectToError);
+    if (postsData.length === 0 || inView) {
+      fetchPosts(
+        postsData,
+        setPostsData,
+        setPostLoading,
+        setRedirectToError,
+        pageNumber,
+        setIsFetchedAllPosts
+      );
+
+      setPageNumber((prevState) => prevState + 1);
     }
-  }, []);
+  }, [inView]);
 
   return (
     <>
@@ -80,6 +90,7 @@ const HomePage = () => {
                 likes={post.likes}
               />
             ))}
+            {!isFetchedAllPosts && <PostSkeleton count={1} myRef={ref} />}
           </>
         )}
       </section>

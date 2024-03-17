@@ -1,11 +1,21 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
-export function PostSkeleton({ count = 1 }) {
+export function PostSkeleton({
+  count = 1,
+  myRef,
+}: {
+  count: number;
+  myRef?: any;
+}) {
   const arr: any[] = new Array(count).fill(0);
   return (
     <>
       {arr.map((elem, index) => (
-        <div className="flex flex-col space-y-3 my-5 bg-dark-2 p-7" key={index}>
+        <div
+          className="flex flex-col space-y-3 my-5 bg-dark-2 p-7"
+          key={index}
+          ref={myRef}
+        >
           <Skeleton className="h-[100px] w-full rounded-xl bg-[#3B3B3B]" />
 
           <div className="space-y-2">

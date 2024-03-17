@@ -5,6 +5,7 @@ import { useUserContext } from "@/context/UserContext";
 import { fetchUser } from "@/helpers/fetchUser";
 import { LoadingDots } from "../shared/LoadingDots";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export function ErrorPage() {
   const router = useRouter();
@@ -28,7 +29,11 @@ export function ErrorPage() {
       <div className="flex flex-col space-x-2 justify-center items-center">
         <div className="text-white text-heading1-bold">Oops! &#x1F613;</div>
         <div className="text-white">Something went wrong</div>
-        <div className="text-white">Please try refreshing the page</div>
+        <Link href="/home" className="mt-5">
+          <p className="bg-primary-500 text-white p-2 rounded-md">
+            Go to home page
+          </p>
+        </Link>
       </div>
     </div>
   );

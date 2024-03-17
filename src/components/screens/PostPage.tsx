@@ -106,7 +106,7 @@ const PostPage = ({ id }: { id: string }) => {
         <section className="relative">
           <div>
             {postLoading ? (
-              <PostSkeleton />
+              <PostSkeleton count={1} />
             ) : (
               <PostCard
                 key={post._id}
