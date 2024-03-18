@@ -28,7 +28,13 @@ export function PostSkeleton({
   );
 }
 
-export function SearchUserSkeleton({ count = 1 }) {
+export function SearchUserSkeleton({
+  count = 1,
+  myRef,
+}: {
+  count: number;
+  myRef?: any;
+}) {
   const arr: any[] = new Array(count).fill(0);
   return (
     <>
@@ -36,6 +42,7 @@ export function SearchUserSkeleton({ count = 1 }) {
         <div
           className="flex space-x-3 max-xs:rounded-xl max-xs:p-4 max-xs:flex-col max-xs:items-center"
           key={index}
+          ref={myRef}
         >
           <Skeleton className="h-12 w-12 rounded-full max-xs:hidden bg-[#3B3B3B]" />
 

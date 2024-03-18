@@ -42,6 +42,7 @@ const HomePage = () => {
   const [redirectToError, setRedirectToError] = useState(false);
   const [pageNumber, setPageNumber] = useState(1);
   const [ref, inView] = useInView();
+  const [fetchingPosts, setFetchingPosts] = useState(false); // this is to wait until the previous fetch posts to complete
 
   if (redirectToError) {
     router.push("/error");
@@ -54,7 +55,12 @@ const HomePage = () => {
   }, []);
 
   useEffect(() => {
-    if (postsData.length === 0 || inView) {
+    if (
+      postsData.length === 0 ||
+      (inView && !fetchingPosts && !isFetchedAllPosts)
+    ) {
+      setFetchingPosts(true); // this is to wait until the previous fetch posts to complete
+
       fetchPosts(
         postsData,
         setPostsData,
@@ -62,7 +68,9 @@ const HomePage = () => {
         setRedirectToError,
         pageNumber,
         setIsFetchedAllPosts
-      );
+      ).finally(() => {
+        setFetchingPosts(false); // this is to wait until the previous fetch posts to complete
+      });
 
       setPageNumber((prevState) => prevState + 1);
     }
@@ -90,7 +98,9 @@ const HomePage = () => {
                 likes={post.likes}
               />
             ))}
-            {!isFetchedAllPosts && <PostSkeleton count={1} myRef={ref} />}
+            {postsData.length > 0 && !isFetchedAllPosts && (
+              <PostSkeleton count={1} myRef={ref} />
+            )}
           </>
         )}
       </section>

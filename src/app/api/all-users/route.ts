@@ -14,8 +14,8 @@ export async function GET(request: NextRequest) {
     const pageNumber: number =
       Number(request.nextUrl.searchParams.get("pageNumber")) || 1;
     const pageSize: number =
-      Number(request.nextUrl.searchParams.get("pageSize")) || 20;
-    const sortBy: any = request.nextUrl.searchParams.get("sortBy") || "desc";
+      Number(request.nextUrl.searchParams.get("pageSize")) || 5;
+    const sortBy: any = request.nextUrl.searchParams.get("sortBy") || "asc";
 
     const skipAmount = (pageNumber - 1) * pageSize;
 

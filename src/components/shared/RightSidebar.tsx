@@ -28,7 +28,7 @@ function RightSidebar() {
       const response = await fetch(
         `/api/all-users?userId=&${
           userData._id
-        }&searchString=${""}&pageNumber=${1}&pageSize=${100}`,
+        }&searchString=${""}&pageNumber=${1}&pageSize=4`,
         {
           cache: "no-store",
         }
@@ -38,12 +38,7 @@ function RightSidebar() {
         throw new Error("Failed to fetch a user");
       }
       const responseData = await response.json();
-      setUsers([
-        responseData.data.users[responseData.data.users.length - 1],
-        responseData.data.users[responseData.data.users.length - 2],
-        responseData.data.users[responseData.data.users.length - 3],
-        responseData.data.users[responseData.data.users.length - 4],
-      ]);
+      setUsers([...responseData.data.users]);
     } catch (error: any) {
       console.log("Error during fetching users", error);
       router.push("/error");
