@@ -139,6 +139,7 @@ const SearchPage = () => {
                 email={person.email}
                 image={person.image}
                 personType="User"
+                currentUserId={userData._id}
               />
             ))}
             {users.length > 0 && !isFetchedAllUsers && (
