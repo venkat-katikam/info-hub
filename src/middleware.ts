@@ -34,6 +34,7 @@ export const config = {
     "/create-post",
     "/update-post",
     "/chats",
+    "/chats/:id*",
     "/profile/:id*",
     "/post/:id*",
     "/error",

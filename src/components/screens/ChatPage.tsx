@@ -7,6 +7,7 @@ import { LoadingDots } from "../shared/LoadingDots";
 import { useRouter } from "next/navigation";
 import ChatBar from "../shared/ChatBar";
 import { ActivitySkeleton } from "../shared/Skeletons";
+import { CreateGroupChatPopUp } from "../shared/CreateGroupChatPopUp";
 
 interface User {
   _id: string;
@@ -43,6 +44,7 @@ const ChatPage = () => {
   const [chatLoading, setChatLoading] = useState(false);
   const [redirectToError, setRedirectToError] = useState(false);
   const [chats, setChats] = useState([]);
+  const [newGrpCreated, setNewGrpCreated] = useState(0);
 
   if (redirectToError) {
     router.push("/error");
@@ -80,36 +82,7 @@ const ChatPage = () => {
     if (userData._id) {
       fetchChats();
     }
-  }, [userData._id]);
-
-  const createGroupChat = async () => {
-    try {
-      const response = await fetch(`/api/chats/create-group`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          groupName: "Hello1",
-          groupUsers: ["65f04321c16ac10af14b7533", "65f04c23ca558fca5d200dba"],
-          currentUser: userData._id,
-        }),
-      });
-
-      if (response.ok) {
-        const responseData = await response.json();
-        console.log("responseData", responseData);
-        // setPostsData([]);
-        // router.push("/home");
-      } else {
-        const responseData = await response.json();
-        router.push("/error");
-        // setCreatePostLoading(false);
-      }
-    } catch (error: any) {
-      console.log("Error during creating group chat", error);
-      router.push("/error");
-      // setCreatePostLoading(false);
-    }
-  };
+  }, [userData._id, newGrpCreated]);
 
   const renameGroupChat = async () => {
     try {
@@ -198,7 +171,16 @@ const ChatPage = () => {
   return (
     <section>
       {userLoading && <LoadingDots />}
+      {!chatLoading && (
+        <div className="flex justify-end mb-3">
+          <CreateGroupChatPopUp
+            currentUserId={userData._id}
+            setNewGrpCreated={setNewGrpCreated}
+          />
+        </div>
+      )}
       {chatLoading && <ActivitySkeleton count={5} />}
+
       {!chatLoading && chats.length === 0 && (
         <p className="!text-base-regular text-light-3">No Chats Yet</p>
       )}
@@ -208,13 +190,6 @@ const ChatPage = () => {
         ))}
       </div>
 
-      <br />
-      <button
-        className="text-white bg-gray-700 mt-10"
-        onClick={createGroupChat}
-      >
-        Create Group Chat
-      </button>
       <br />
       <button
         className="text-white bg-gray-700 mt-10"
