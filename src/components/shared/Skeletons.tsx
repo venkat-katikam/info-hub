@@ -54,10 +54,15 @@ export function SearchUserSkeleton({
   );
 }
 
-export function ActivitySkeleton({ count = 1 }) {
+export function ActivitySkeleton({ count = 1, isChat = false }) {
   const arr: any[] = new Array(count).fill(0);
   return (
     <>
+      {isChat && (
+        <div className="flex justify-end mb-2">
+          <Skeleton className=" h-[40px] w-[170px] rounded-xl bg-[#3B3B3B]" />
+        </div>
+      )}
       {arr.map((elem, index) => (
         <div className="flex space-x-3 mx-5 py-3" key={index}>
           <Skeleton className="h-12 w-12 rounded-full bg-[#3B3B3B]" />

@@ -22,7 +22,7 @@
 
   /* Chat */
   .chat-card {
-    @apply flex items-center gap-2 rounded-md  px-7 py-4;
+    @apply flex items-center gap-2 rounded-md  px-4 py-4;
   }
 
   /* No Result */

@@ -2,6 +2,7 @@ import { connectMongoDB } from "@/dbConfig/dbConfig";
 import User from "@/models/user.model";
 import Chat from "@/models/chat.model";
 import { NextRequest, NextResponse } from "next/server";
+import Message from "@/models/message.model";
 
 connectMongoDB();
 
@@ -87,11 +88,11 @@ export async function GET(
       .populate("latestMessage")
       .sort({ updatedAt: -1 });
 
-    const resposne = await User.populate(results, {
+    const response = await Message.populate(results, {
       path: "latestMessage.sender",
       select: "name email image",
     });
-    return NextResponse.json({ chats: resposne }, { status: 200 });
+    return NextResponse.json({ chats: response }, { status: 200 });
   } catch (error: any) {
     return NextResponse.json(
       {
