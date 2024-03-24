@@ -33,7 +33,7 @@ export default function ChatBar({
 
   return (
     <>
-      <Link key={chat._id} href={`/chats/${chat._id}`}>
+      <Link key={chat._id} href={`/chat/${chat._id}`}>
         <article className="chat-card my-2">
           <div className="relative h-11 w-11">
             <Image

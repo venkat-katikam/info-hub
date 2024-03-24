@@ -1,4 +1,4 @@
-"use-client";
+"use client";
 import { useState } from "react";
 import { formatDateString } from "@/lib/utils";
 import Image from "next/image";

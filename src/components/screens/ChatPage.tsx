@@ -190,7 +190,7 @@ const ChatPage = () => {
         ))}
       </div>
 
-      <br />
+      {/* <br />
       <button
         className="text-white bg-gray-700 mt-10"
         onClick={renameGroupChat}
@@ -207,7 +207,7 @@ const ChatPage = () => {
         onClick={removeUserFromGroup}
       >
         Remove user from Group Chat
-      </button>
+      </button> */}
     </section>
   );
 };
