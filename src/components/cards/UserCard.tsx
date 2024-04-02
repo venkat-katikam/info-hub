@@ -53,6 +53,12 @@ const UserCard = ({
     }
   };
 
+  //TODO: Remove below gotoChats function after adding chats feature
+
+  const gotoChats = () => {
+    router.push(`/chats`);
+  };
+
   function maskEmail(email: string) {
     const firstTwoLetters = email.slice(0, 2); // Get the first two letters
     const lastTenLetters = email.slice(-10); // Get the last ten letters
@@ -92,7 +98,10 @@ const UserCard = ({
         >
           View
         </Button>
-        <Button className="user-card_btn" onClick={() => createChat(id)}>
+        {/* <Button className="user-card_btn" onClick={() => createChat(id)}>
+          Message
+        </Button> */}
+        <Button className="user-card_btn" onClick={gotoChats}>
           Message
         </Button>
       </article>
