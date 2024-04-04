@@ -137,3 +137,31 @@ export function ChatUsersSkeleton({
     </>
   );
 }
+
+export function MessagesSkeleton({
+  count = 1,
+  myRef,
+}: {
+  count: number;
+  myRef?: any;
+}) {
+  const arr: any[] = new Array(count).fill(0);
+  return (
+    <>
+      {arr.map((elem, index) => (
+        <div className="mt-20 flex flex-col mb-3" key={index} ref={myRef}>
+          <Skeleton className=" h-10 w-2/5 rounded-3xl  bg-[#3B3B3B] mb-5 " />
+          <Skeleton className=" h-10 w-3/5 rounded-3xl  bg-[#3B3B3B] mb-5 " />
+
+          <Skeleton className=" h-10 w-2/5 rounded-3xl  bg-[#3B3B3B] mb-5 ml-auto" />
+          <Skeleton className=" h-10 w-3/5 rounded-3xl  bg-[#3B3B3B] mb-5 ml-auto" />
+
+          <Skeleton className=" h-10 w-2/5 rounded-3xl  bg-[#3B3B3B] mb-5 " />
+          <Skeleton className=" h-10 w-2/5 rounded-3xl  bg-[#3B3B3B] mb-5 " />
+
+          <Skeleton className=" h-10 w-3/5 rounded-3xl  bg-[#3B3B3B] mb-5 ml-auto" />
+        </div>
+      ))}
+    </>
+  );
+}

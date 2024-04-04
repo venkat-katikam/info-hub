@@ -39,8 +39,7 @@ const UserCard = ({
 
       if (response.ok) {
         const responseData = await response.json();
-        console.log("responseData", responseData);
-        router.push(`/chats/${chatUserId}`);
+        router.push(`/chat/${responseData?.chats?._id}`);
       } else {
         const responseData = await response.json();
         router.push("/error");
@@ -51,12 +50,6 @@ const UserCard = ({
     } finally {
       setCreateChatLoading(false);
     }
-  };
-
-  //TODO: Remove below gotoChats function after adding chats feature
-
-  const gotoChats = () => {
-    router.push(`/chats`);
   };
 
   function maskEmail(email: string) {
@@ -98,12 +91,11 @@ const UserCard = ({
         >
           View
         </Button>
-        {/* <Button className="user-card_btn" onClick={() => createChat(id)}>
-          Message
-        </Button> */}
-        <Button className="user-card_btn" onClick={gotoChats}>
-          Message
-        </Button>
+        {currentUserId !== id && (
+          <Button className="user-card_btn" onClick={() => createChat(id)}>
+            Message
+          </Button>
+        )}
       </article>
     </>
   );

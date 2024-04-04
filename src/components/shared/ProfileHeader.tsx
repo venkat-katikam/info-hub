@@ -19,6 +19,17 @@ const ProfileHeader = ({
   bio,
 }: Props) => {
   const router = useRouter();
+
+  const getEmail = (email: string, isCurrentUser: boolean) => {
+    if (isCurrentUser) {
+      return email;
+    }
+
+    const firstTwoLetters = email.slice(0, 2); // Get the first two letters
+    const lastTenLetters = email.slice(-10); // Get the last ten letters
+    return firstTwoLetters + "*****" + lastTenLetters; // Concatenate the masked string
+  };
+
   return (
     <div className="flex w-full flex-col justify-start">
       <div className="flex items-center justify-between">
@@ -37,7 +48,7 @@ const ProfileHeader = ({
             </h2>
             <p className="text-base-medium text-gray-1 break-all">
               <span className="text-base-medium text-primary-500">@</span>{" "}
-              {email}
+              {getEmail(email, accountId === authUserId)}
             </p>
           </div>
         </div>

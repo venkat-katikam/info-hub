@@ -13,6 +13,8 @@ import {
   isSameSenderMargin,
   isSameUser,
 } from "@/helpers/ChatHelper";
+import { MessagesSkeleton } from "../shared/Skeletons";
+import Link from "next/link";
 
 interface Sender {
   _id: string;
@@ -175,30 +177,66 @@ export default function IndividualChatPage({ chatId }: { chatId: string }) {
     }
   };
 
+  const getChatName = () => {
+    if (!chat.isGroupChat) {
+      const user = chat?.users?.filter((user) => user._id !== userData._id);
+      return user[0]?.name;
+    } else {
+      return chat?.chatName;
+    }
+  };
+
+  const getChatDp = () => {
+    if (!chat.isGroupChat) {
+      const user = chat?.users?.filter((user) => user._id !== userData._id);
+      return user[0]?.image;
+    } else {
+      return "/assets/group-chat-dp.JPG";
+    }
+  };
+
+  const getChatUserId = () => {
+    if (!chat.isGroupChat) {
+      const user = chat?.users?.filter((user) => user._id !== userData._id);
+      return user[0]?._id;
+    } else {
+      return "";
+    }
+  };
+
   return (
     <>
       {(userLoading || chatLoading) && <LoadingDots />}
+      {messagesLoading && <MessagesSkeleton count={1} />}
+
       <div className="relative">
         <div className="flex items-center fixed bg-dark-1 w-full top-[54px] py-3">
           <Image
             src="/assets/back.svg"
-            alt="delete"
+            alt="back"
             width={40}
             height={40}
             className="cursor-pointer object-contain ml-1"
             onClick={() => router.back()}
           />
-          <div className="relative h-11 w-11 ml-2 cursor-pointer">
-            <Image
-              src="/assets/default-profile.jpg"
-              alt="Profile picture"
-              fill
-              className="rounded-full object-cover"
-            />
-          </div>
-          <p className="text-white text-heading4-medium ml-3">
-            {chat?.chatName}
-          </p>
+          <Link
+            href={`/profile/${getChatUserId()}`}
+            className="flex items-center"
+          >
+            <div className="relative h-11 w-11 ml-2 cursor-pointer">
+              {getChatDp() && (
+                <Image
+                  src={getChatDp()}
+                  alt="Profile picture"
+                  fill
+                  className="rounded-full object-cover"
+                />
+              )}
+            </div>
+          </Link>
+          <h4 className="text-white text-heading4-medium ml-3 max-md:w-[160px] max-md:truncate">
+            {getChatName()}
+          </h4>
         </div>
         <div className="mt-12 mb-10">
           {allMessages &&
@@ -236,7 +274,8 @@ export default function IndividualChatPage({ chatId }: { chatId: string }) {
               </div>
             ))}
         </div>
-        <div className="flex items-center fixed bg-dark-1 bottom-0 py-3 ">
+
+        <div className="flex items-center fixed md:bottom-0 md:w-[80%] lg:w-[75%] xl:w-[64%] bg-dark-1  py-3 w-11/12 bottom-[90px] mr-2">
           <Input
             type="text"
             placeholder="Type message here ..."
@@ -246,8 +285,14 @@ export default function IndividualChatPage({ chatId }: { chatId: string }) {
               setMessage(e.target.value);
             }}
           />
-          <Button className="ml-2" onClick={sendMessage}>
-            Send
+          <Button className="ml-2 p-2" onClick={sendMessage}>
+            <Image
+              src="/assets/share.svg"
+              alt="send"
+              width={40}
+              height={40}
+              className="cursor-pointer object-contain rotate-45"
+            />
           </Button>
         </div>
       </div>

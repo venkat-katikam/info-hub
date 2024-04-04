@@ -40,7 +40,7 @@ export default function ChatBar({
               src={
                 updatedChatUsers.length === 1
                   ? updatedChatUsers[0].image
-                  : "/assets/default-profile.jpg"
+                  : "/assets/group-chat-dp.JPG"
               }
               alt="Profile picture"
               fill
