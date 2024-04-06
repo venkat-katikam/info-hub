@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import ChatBar from "../shared/ChatBar";
 import { ActivitySkeleton } from "../shared/Skeletons";
 import { CreateGroupChatPopUp } from "../shared/CreateGroupChatPopUp";
+import Image from "next/image";
 
 interface User {
   _id: string;
@@ -34,6 +35,7 @@ interface Chat {
   groupAdmin: ChatUser;
   createdAt: string;
   updatedAt: string;
+  latestMessage: { content: string; sender: ChatUser };
   __v: number;
 }
 
@@ -172,7 +174,18 @@ const ChatPage = () => {
     <section>
       {userLoading && <LoadingDots />}
       {!chatLoading && (
-        <div className="flex justify-end mb-3">
+        <div className="flex justify-between mb-3">
+          <Image
+            src="/assets/search-gray.svg"
+            alt="search"
+            width={24}
+            height={24}
+            className="object-contain ml-5 cursor-pointer"
+            onClick={() => {
+              router.push("/search");
+            }}
+          />
+
           <CreateGroupChatPopUp
             currentUserId={userData._id}
             setNewGrpCreated={setNewGrpCreated}
@@ -186,7 +199,12 @@ const ChatPage = () => {
       )}
       <div>
         {chats.map((chat: Chat) => (
-          <ChatBar chat={chat} key={chat._id} currentUserId={userData._id} />
+          <ChatBar
+            chat={chat}
+            key={chat._id}
+            currentUserId={userData._id}
+            currentUserName={userData.name}
+          />
         ))}
       </div>
 

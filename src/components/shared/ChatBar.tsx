@@ -17,15 +17,18 @@ interface Chat {
   groupAdmin: ChatUser;
   createdAt: string;
   updatedAt: string;
+  latestMessage: { content: string; sender: ChatUser };
   __v: number;
 }
 
 export default function ChatBar({
   chat,
   currentUserId,
+  currentUserName,
 }: {
   chat: Chat;
   currentUserId: string;
+  currentUserName: string;
 }) {
   const updatedChatUsers = chat?.users.filter(
     (user) => user._id !== currentUserId
@@ -48,9 +51,23 @@ export default function ChatBar({
             />
           </div>
 
-          <h4 className="ml-2 cursor-pointer text-base-semibold text-light-1 max-md:w-[160px] max-md:truncate">
-            {chat?.isGroupChat ? chat?.chatName : updatedChatUsers[0].name}
-          </h4>
+          <div className=" flex flex-col">
+            <h4 className="ml-2 cursor-pointer text-base-semibold text-light-1 max-md:w-[160px] max-md:truncate">
+              {chat?.isGroupChat ? chat?.chatName : updatedChatUsers[0].name}
+            </h4>
+            <p className="text-gray-500 ml-2">
+              {chat?.latestMessage?.content ? (
+                <>
+                  {chat?.latestMessage?.sender?.name === currentUserName
+                    ? "You"
+                    : chat?.latestMessage?.sender?.name}
+                  : {chat?.latestMessage?.content}
+                </>
+              ) : (
+                <>No messages yet</>
+              )}
+            </p>
+          </div>
         </article>
       </Link>
     </>
