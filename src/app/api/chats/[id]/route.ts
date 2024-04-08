@@ -24,7 +24,7 @@ export async function POST(
       );
     }
 
-    var isChat = await Chat.find({
+    let isChat = await Chat.find({
       isGroupChat: false,
       $and: [
         { users: { $elemMatch: { $eq: currentUserId } } },
@@ -42,7 +42,7 @@ export async function POST(
     if (isChat.length > 0) {
       return NextResponse.json({ chats: isChat[0] }, { status: 200 });
     } else {
-      var chatData = {
+      let chatData = {
         chatName: "sender",
         isGroupChat: false,
         users: [currentUserId, chatUserId],

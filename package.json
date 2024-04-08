@@ -4,8 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "server": "node server/server.js",
     "build": "next build",
-    "start": "next start",
+    "startApp": "next start",
+    "start": "npm run build && concurrently \"npm run startApp\" \"npm run server\"",
     "lint": "next lint"
   },
   "dependencies": {
@@ -20,6 +22,7 @@
     "bcryptjs": "^2.4.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
+    "concurrently": "^8.2.2",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.303.0",
     "mongoose": "^8.0.3",
@@ -28,6 +31,7 @@
     "react-dom": "^18",
     "react-hook-form": "^7.49.2",
     "react-intersection-observer": "^9.8.1",
+    "socket.io-client": "^4.7.5",
     "svix": "^1.15.0",
     "tailwind-merge": "^2.2.0",
     "tailwindcss-animate": "^1.0.7",

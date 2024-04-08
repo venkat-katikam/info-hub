@@ -15,7 +15,10 @@ import {
 } from "@/helpers/ChatHelper";
 import { MessagesSkeleton } from "../shared/Skeletons";
 import Link from "next/link";
-// import io from "socket.io-client";
+import io from "socket.io-client";
+
+const ENDPOINT = "https://info-hub-peach.vercel.app";
+let socket: any, selectedChatCompare: IndividualChat;
 
 interface Sender {
   _id: string;
@@ -58,10 +61,6 @@ interface Message {
   __v: number;
 }
 
-// const ENDPOINT = "https://info-hub-peach.vercel.app/"
-// const ENDPOINT = "http://localhost:3000/";
-// let socket, selectedChatCompare;
-
 export default function IndividualChatPage({ chatId }: { chatId: string }) {
   const router = useRouter();
   const { userData, setUserData } = useUserContext();
@@ -88,10 +87,22 @@ export default function IndividualChatPage({ chatId }: { chatId: string }) {
   const [sendMessageLoading, setSendMessageLoading] = useState(false);
   const [messagesLoading, setMessagesLoading] = useState(false);
   const [chatLoading, setChatLoading] = useState(false);
+  const [fetchChatAgain, setFetchChatAgain] = useState(false);
+  const [socketConnected, setSocketConnected] = useState(false);
+  const [typing, setTyping] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
 
   if (redirectToError) {
     router.push("/error");
   }
+
+  useEffect(() => {
+    socket = io(ENDPOINT);
+    socket.emit("setup", userData);
+    socket.on("connected", () => setSocketConnected(true));
+    socket.on("typing", () => setIsTyping(true));
+    socket.on("stop typing", () => setIsTyping(false));
+  }, []);
 
   useEffect(() => {
     if (!userData._id) {
@@ -109,6 +120,7 @@ export default function IndividualChatPage({ chatId }: { chatId: string }) {
         const responseData = await response.json();
         console.log("responseData", responseData);
         setAllMessages(responseData.data);
+        socket.emit("join chat", chatId);
       } else {
         router.push("/error");
         throw new Error("Failed to fetch messages");
@@ -146,18 +158,40 @@ export default function IndividualChatPage({ chatId }: { chatId: string }) {
   useEffect(() => {
     if (userData._id && chatId) {
       fetchChat();
-      fetchMessages();
     }
-  }, [userData._id, chatId]);
+  }, [userData._id, chatId, fetchChatAgain]);
 
-  // useEffect(() => {
-  //   socket = io(ENDPOINT);
-  // });
+  useEffect(() => {
+    if (userData._id && chatId) {
+      fetchMessages();
+      selectedChatCompare = chat;
+    }
+  }, [userData._id, chatId, chat]);
+
+  useEffect(() => {
+    socket.on("message recieved", (newMessageRecieved: Message) => {
+      if (
+        !selectedChatCompare || // if chat is not selected or doesn't match current chat
+        selectedChatCompare._id !== newMessageRecieved.chat._id
+      ) {
+        // if (!chatData.notification.includes(newMessageRecieved)) {
+        //   setChatData({
+        //     notification: [newMessageRecieved, ...chatData.notification],
+        //   });
+        //   setFetchChatAgain(!fetchChatAgain);
+        // }
+      } else {
+        setAllMessages([...allMessages, newMessageRecieved]);
+      }
+    });
+  });
 
   const sendMessage = async () => {
+    // if(message && e.key==="Enter")
     if (message === "") {
       return;
     }
+    socket.emit("stop typing", chat._id);
     try {
       setSendMessageLoading(true);
       setMessage("");
@@ -174,6 +208,7 @@ export default function IndividualChatPage({ chatId }: { chatId: string }) {
 
       if (response.ok) {
         const responseData = await response.json();
+        socket.emit("new message", responseData?.data);
         setAllMessages([...allMessages, responseData?.data]);
       } else {
         const responseData = await response.json();
@@ -214,6 +249,27 @@ export default function IndividualChatPage({ chatId }: { chatId: string }) {
     } else {
       return "";
     }
+  };
+
+  const typingHandler = (e: any) => {
+    setMessage(e.target.value);
+
+    if (!socketConnected) return;
+
+    if (!typing) {
+      setTyping(true);
+      socket.emit("typing", chat._id);
+    }
+    let lastTypingTime = new Date().getTime();
+    let timerLength = 3000;
+    setTimeout(() => {
+      let timeNow = new Date().getTime();
+      let timeDiff = timeNow - lastTypingTime;
+      if (timeDiff >= timerLength && typing) {
+        socket.emit("stop typing", chat._id);
+        setTyping(false);
+      }
+    }, timerLength);
   };
 
   return (
@@ -285,6 +341,21 @@ export default function IndividualChatPage({ chatId }: { chatId: string }) {
                 </span>
               </div>
             ))}
+          {isTyping ? (
+            <div className="flex space-x-2 items-center mt-6 bg-dark-4 rounded-3xl px-4 py-3 w-fit">
+              <div
+                className={`h-3 w-3 bg-white rounded-full animate-bounce [animation-delay:-0.3s]`}
+              ></div>
+              <div
+                className={`h-3 w-3 bg-white rounded-full animate-bounce [animation-delay:-0.15s]`}
+              ></div>
+              <div
+                className={`h-3 w-3 bg-white rounded-full animate-bounce`}
+              ></div>
+            </div>
+          ) : (
+            <></>
+          )}
         </div>
 
         <div className="flex items-center fixed md:bottom-0 md:w-[80%] lg:w-[75%] xl:w-[64%] bg-dark-1  py-3 w-11/12 bottom-[90px] mr-2">
@@ -293,9 +364,7 @@ export default function IndividualChatPage({ chatId }: { chatId: string }) {
             placeholder="Type message here ..."
             className="no-focus text-light-1 outline-none bg-dark-2"
             value={message}
-            onChange={(e) => {
-              setMessage(e.target.value);
-            }}
+            onChange={typingHandler}
           />
           {!sendMessageLoading ? (
             <Button className="ml-2 p-2" onClick={sendMessage}>

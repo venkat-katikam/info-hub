@@ -16,14 +16,14 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  var newMessage = {
+  let newMessage = {
     sender: userId,
     content: content,
     chat: chatId,
   };
 
   try {
-    var message = await Message.create(newMessage);
+    let message = await Message.create(newMessage);
 
     message = await message.populate("sender", "name image");
     message = await message.populate("chat");
