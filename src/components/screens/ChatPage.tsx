@@ -66,7 +66,6 @@ const ChatPage = () => {
 
       if (response.ok) {
         const responseData = await response.json();
-        console.log("responseData", responseData);
         setChats(responseData.chats);
       } else {
         router.push("/error");
@@ -99,18 +98,13 @@ const ChatPage = () => {
 
       if (response.ok) {
         const responseData = await response.json();
-        console.log("responseData", responseData);
-        // setPostsData([]);
-        // router.push("/home");
       } else {
         const responseData = await response.json();
         router.push("/error");
-        // setCreatePostLoading(false);
       }
     } catch (error: any) {
       console.log("Error during updating group chat", error);
       router.push("/error");
-      // setCreatePostLoading(false);
     }
   };
 
@@ -127,18 +121,13 @@ const ChatPage = () => {
 
       if (response.ok) {
         const responseData = await response.json();
-        console.log("responseData", responseData);
-        // setPostsData([]);
-        // router.push("/home");
       } else {
         const responseData = await response.json();
         router.push("/error");
-        // setCreatePostLoading(false);
       }
     } catch (error: any) {
       console.log("Error during updating group chat", error);
       router.push("/error");
-      // setCreatePostLoading(false);
     }
   };
 
@@ -155,18 +144,13 @@ const ChatPage = () => {
 
       if (response.ok) {
         const responseData = await response.json();
-        console.log("responseData", responseData);
-        // setPostsData([]);
-        // router.push("/home");
       } else {
         const responseData = await response.json();
         router.push("/error");
-        // setCreatePostLoading(false);
       }
     } catch (error: any) {
       console.log("Error during updating group chat", error);
       router.push("/error");
-      // setCreatePostLoading(false);
     }
   };
 

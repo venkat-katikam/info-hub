@@ -17,8 +17,8 @@ import { MessagesSkeleton } from "../shared/Skeletons";
 import Link from "next/link";
 import io from "socket.io-client";
 
-const ENDPOINT = "https://info-hub-peach.vercel.app";
-let socket: any, selectedChatCompare: IndividualChat;
+const ENDPOINT = process.env.SERVER_URL || "http://localhost:5000";
+let socket: any;
 
 interface Sender {
   _id: string;
@@ -87,10 +87,11 @@ export default function IndividualChatPage({ chatId }: { chatId: string }) {
   const [sendMessageLoading, setSendMessageLoading] = useState(false);
   const [messagesLoading, setMessagesLoading] = useState(false);
   const [chatLoading, setChatLoading] = useState(false);
-  const [fetchChatAgain, setFetchChatAgain] = useState(false);
   const [socketConnected, setSocketConnected] = useState(false);
   const [typing, setTyping] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  const [selectedChatCompare, setSelectedChatCompare] =
+    useState<IndividualChat | null>(null);
 
   if (redirectToError) {
     router.push("/error");
@@ -103,6 +104,24 @@ export default function IndividualChatPage({ chatId }: { chatId: string }) {
     socket.on("typing", () => setIsTyping(true));
     socket.on("stop typing", () => setIsTyping(false));
   }, []);
+
+  useEffect(() => {
+    socket.on("message received", (newMessageRecieved: Message) => {
+      if (
+        !selectedChatCompare || // if chat is not selected or doesn't match current chat
+        selectedChatCompare._id !== newMessageRecieved.chat._id
+      ) {
+        // if (!chatData.notification.includes(newMessageRecieved)) {
+        //   setChatData({
+        //     notification: [newMessageRecieved, ...chatData.notification],
+        //   });
+        //   setFetchChatAgain(!fetchChatAgain);
+        // }
+      } else {
+        setAllMessages([...allMessages, newMessageRecieved]);
+      }
+    });
+  });
 
   useEffect(() => {
     if (!userData._id) {
@@ -118,7 +137,7 @@ export default function IndividualChatPage({ chatId }: { chatId: string }) {
 
       if (response.ok) {
         const responseData = await response.json();
-        console.log("responseData", responseData);
+
         setAllMessages(responseData.data);
         socket.emit("join chat", chatId);
       } else {
@@ -141,7 +160,7 @@ export default function IndividualChatPage({ chatId }: { chatId: string }) {
 
       if (response.ok) {
         const responseData = await response.json();
-        console.log("responseData", responseData);
+
         setChat(responseData.chat);
       } else {
         router.push("/error");
@@ -159,32 +178,14 @@ export default function IndividualChatPage({ chatId }: { chatId: string }) {
     if (userData._id && chatId) {
       fetchChat();
     }
-  }, [userData._id, chatId, fetchChatAgain]);
+  }, [userData._id, chatId]);
 
   useEffect(() => {
     if (userData._id && chatId) {
       fetchMessages();
-      selectedChatCompare = chat;
+      setSelectedChatCompare(() => chat);
     }
   }, [userData._id, chatId, chat]);
-
-  useEffect(() => {
-    socket.on("message recieved", (newMessageRecieved: Message) => {
-      if (
-        !selectedChatCompare || // if chat is not selected or doesn't match current chat
-        selectedChatCompare._id !== newMessageRecieved.chat._id
-      ) {
-        // if (!chatData.notification.includes(newMessageRecieved)) {
-        //   setChatData({
-        //     notification: [newMessageRecieved, ...chatData.notification],
-        //   });
-        //   setFetchChatAgain(!fetchChatAgain);
-        // }
-      } else {
-        setAllMessages([...allMessages, newMessageRecieved]);
-      }
-    });
-  });
 
   const sendMessage = async () => {
     // if(message && e.key==="Enter")
