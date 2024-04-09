@@ -179,7 +179,9 @@ const ChatPage = () => {
       {chatLoading && <ActivitySkeleton count={5} isChat={true} />}
 
       {!chatLoading && chats.length === 0 && (
-        <p className="!text-base-regular text-light-3">No Chats Yet</p>
+        <p className="!text-base-regular text-light-3 flex justify-center mt-10">
+          No Chats Yet
+        </p>
       )}
       <div>
         {chats.map((chat: Chat) => (
