@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 export default function Page() {
   return (
@@ -35,7 +35,7 @@ export default function Page() {
         </Button>
         <Button className="m-5 w-1/3 bg-light-2 text-slate-900 hover:text-light-1">
           <Link className="w-full" href="/register">
-            Register
+            Signup
           </Link>
         </Button>
       </div>
